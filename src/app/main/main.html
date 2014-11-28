@@ -1,0 +1,31 @@
+<h6>Backups</h6>
+<li ng-repeat="backup in backups">
+  {{backup}}<button ng-click="restoreBackup(backup.id)" ng-disabled="restoringBackup">RESTORE</button>
+</li>
+<h5 ng-show="restoringBackup">Restoring {{restoringName}}({{restoringPercent}}% complete) ....</h5>
+<div ng-show="!backups || backups.length === 0">
+  no backups found.
+</div>
+<br/>
+<h3> Create a Backup</h3>
+<label>Name: </label>
+<input type="text" ng-model="backupName"/>
+<br />
+<div class="form-group add-bottom">
+  <label>Type: </label>
+  <div class="radio">
+    <label>
+    <input type="radio" name="aws" value="aws" ng-model="backupType">
+      AWS
+    </label>
+  </div>
+  <div class="radio">
+    <label>
+      <input type="radio" name="localFS" ng-model="backupType" value="local">
+        local file system
+    </label>
+  </div>
+</div>
+<br/>
+<button ng-click="createBackup(backupName,backupType)" ng-disabled="creatingBackup">CREATE</button>
+<h5 ng-show="creatingBackup">Backing up({{percent}}% complete) ....</h5>
