@@ -9,27 +9,33 @@
 
   <body ng-app="koastAdminApp">
 
-<code>
-<pre>
-Welcome to
- _                   _
-| | _____   __ _ ___| |
-| |/ / _ \ / _` / __| __|
-|   < (_) | (_| \__ \ |_
-|_|\_\___/ \__,_|___/\__| Admin App &lt;3
-</pre>
+    <code>
+    <pre>
+    Welcome to
+     _                   _
+    | | _____   __ _ ___| |
+    | |/ / _ \ / _` / __| __|
+    |   < (_) | (_| \__ \ |_
+    |_|\_\___/ \__,_|___/\__| Admin App &lt;3
+    </pre>
 
 
-  <br />
-  With love, from<br />
-  <a href="http://rangle.io">rangle.io</a>
-</code>
+      <br />
+      With love, from<br />
+      <a href="http://rangle.io">rangle.io</a>
+    </code>
+    <div ng-view class="admin-app">
+    </div>
 
     <script src="/bower_components/lodash/dist/lodash.min.js"></script>
     <script src="/bower_components/angular/angular.js"></script>
+    <script src="/bower_components/angular-route/angular-route.js"></script>
     <script src="/bower_components/koast-angular/dist/koast.js"></script>
 
     <script type="text/javascript" src="app/app.js"></script>
+    <script type="text/javascript" src="app/main/mainCtr.js"></script>
+    <script type="text/javascript" src="app/services/koastAdmin.js"></script>
+    <script type="text/javascript" src="app/services/koastBackup.js"></script>
   </body>
 
 </html>
