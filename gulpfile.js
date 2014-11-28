@@ -3,8 +3,8 @@ var rg = require('rangle-gulp');
 var colors = require('colors');
 var runSequence = require('run-sequence');
 
-var appFiles =  ['src/app/**/*.js', '!./src/app/**/*.test.js'];
-var testFiles =  ['./src/app/**/*.test.js'];
+var appFiles =  ['src/app/app.js','src/app/**/*.js', '!./src/app/**/*.test.js'];
+var testFiles =  ['src/app/app.js','src/app/**/*.js'];
 var karmaFile = './testing/karma.conf.js';
 var karamConfig = {
   karmaConf : karmaFile,
@@ -12,7 +12,9 @@ var karamConfig = {
   vendor: [
     'src/bower_components/angular/angular.js',
     'src/bower_components/angular-mocks/angular-mocks.js',
-    'src/bower_components/q/q.js'
+    'src/bower_components/q/q.js',
+    'src/bower_components/lodash/dist/lodash.js',
+    'src/bower_components/koast-angular/dist/koast.js',
   ],
   showStack: true
 };

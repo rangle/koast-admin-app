@@ -2,7 +2,7 @@
 
 
 angular.module('koastAdminApp', [
-  'koast',
+
   'ngRoute',
   'koastAdminApp.service'
 ])
@@ -19,7 +19,7 @@ angular.module('koastAdminApp', [
     }
   ]);
 
-angular.module('koastAdminApp.service',[])
+angular.module('koastAdminApp.service',['koast'])
 .value('ADMIN_DISCOVERY_PATH','TODO')
 .value('KOAST_ROOT','http://TODO/api/')
 .run(['koastAdmin',function(koastAdmin){
