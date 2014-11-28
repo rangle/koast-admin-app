@@ -18,7 +18,7 @@ angular.module('koastAdminApp')
         koastBackup.getBackupStatus(id)
         .then(function(status){
           $scope.percent = status.completed;
-        })
+        });
       },100);
     });
   };
@@ -41,7 +41,7 @@ angular.module('koastAdminApp')
         koastBackup.getBackupStatus(id)
         .then(function(status){
           $scope.restoringPercent = status.completed;
-        })
+        });
       },100);
     });
   };
