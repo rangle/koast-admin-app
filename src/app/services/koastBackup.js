@@ -78,6 +78,8 @@ angular.module('koastAdminApp.service')
 
  return service;
 }])
+//SR: this a tmp mock while awating the server implementation
+//once koast has this functionality, this mock should be moved to the unit test file to be used there
 .service('koastAdmin_$http_MOCK',['$q',function($q){
   var backUpStatuses = {};
   var service = {
@@ -109,7 +111,7 @@ angular.module('koastAdminApp.service')
           if(backUpStatuses[config.params.id] < 100){
             backUpStatuses[config.params.id] += 5;
           }
-          deferred.resolve({completed : backUpStatuses[config.params.id] });
+          deferred.resolve({completed : backUpStatuses[config.params.id] || 0 });
         break;
         default:
           deferred.reject(new Error('unexpected url: '+url));

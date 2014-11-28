@@ -2,11 +2,10 @@
 
 
 angular.module('koastAdminApp', [
-  'koast',
-  'ui.router',
-  'koastAdminApp.service'
-])
-.config(['$stateProvider', '$urlRouterProvider',
+    'ui.router',
+    'koastAdminApp.service'
+  ])
+  .config(['$stateProvider', '$urlRouterProvider',
     function ($stateProvider, $urlRouterProvider) {
       $stateProvider
         .state('main', {
@@ -18,9 +17,9 @@ angular.module('koastAdminApp', [
     }
   ]);
 
-angular.module('koastAdminApp.service',[])
-.value('ADMIN_DISCOVERY_PATH','TODO')
-.value('KOAST_ROOT','http://TODO/api/')
-.run(function(koastAdmin){
-  koastAdmin.load();
-});
+angular.module('koastAdminApp.service', ['koast'])
+  .value('ADMIN_DISCOVERY_PATH', 'TODO')
+  .value('KOAST_ROOT', 'http://TODO/api/')
+  .run(function (koastAdmin) {
+    koastAdmin.load();
+  });

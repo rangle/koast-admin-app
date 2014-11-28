@@ -9,12 +9,14 @@ angular.module('koastAdminApp.service')
       .then(function(res){
         supportedFunctionality = res;
         return res;
-      })
+      });
     }
 
   };
   return service;
 }])
+//SR: this a tmp mock while awating the server implementation
+//once koast has this functionality, this mock should be moved to the unit test file to be used there
 .service('koastAdmin_HTTP_MOCK',['$q',function($q){
   var service = {
     get : function(url){
