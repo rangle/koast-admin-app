@@ -3,25 +3,24 @@
 
 angular.module('koastAdminApp', [
   'koast',
-  'ngRoute',
+  'ui.router',
   'koastAdminApp.service'
 ])
-.config(['$routeProvider',
-    function ($routeProvider) {
-      $routeProvider
-        .when('/', {
+.config(['$stateProvider', '$urlRouterProvider',
+    function ($stateProvider, $urlRouterProvider) {
+      $stateProvider
+        .state('main', {
+          url: '/',
           templateUrl: 'app/main/main.html',
           controller: 'MainCtrl'
-        })
-        .otherwise({
-          redirectTo: '/'
         });
+      $urlRouterProvider.otherwise('/');
     }
   ]);
 
 angular.module('koastAdminApp.service',[])
 .value('ADMIN_DISCOVERY_PATH','TODO')
 .value('KOAST_ROOT','http://TODO/api/')
-.run(['koastAdmin',function(koastAdmin){
+.run(function(koastAdmin){
   koastAdmin.load();
-}]);
+});
