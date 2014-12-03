@@ -31,7 +31,15 @@
     "gulp-watch": "~3.0",
     "rangle-gulp": "0.0.7",
     "run-sequence": "^1.0.2",
-    "through2": "^0.6.3"
+    "through2": "^0.6.3",
+    "connect-livereload": "0.5.2",
+    "gulp-connect": "2.2.0",
+    "gulp-watch": "3.0.0",
+    "gulp-sass": "1.1.0",
+    "gulp-concat": "2.4.2",
+    "gulp-minify-css": "0.3.11",
+    "gulp-rename": "1.2.0",
+    "node-bourbon": "1.2.3"
   },
   "peerDependencies": {
     "koast": ">=0.4.5"

@@ -1,0 +1,382 @@
+@import 'bourbon'; // http://bourbon.io/
+
+// Meyer's Reset
+@import 'reset';
+// responsive grid and media queries
+@import 'layout';
+
+// Font-awesome
+$fa-font-path: "/bower_components/fontawesome/fonts" !default;
+@import '../bower_components/fontawesome/scss/font-awesome';
+
+
+// Brand
+$brand  : #2f323a;
+
+$color-1: #6269AD;
+$color-2: #19191a;
+$color-3: #fb4e51;
+$color-4: #E8E9F3;
+$color-5: #fcfcfc;
+
+// Action Colours
+$success: #2fbf71;
+$alert: $color-3;
+
+// Fonts
+$primary-font: 'Open Sans', sans-serif;
+$secondary-font: 'PT Sans Narrow', sans-serif;
+
+
+/* --------------------------------
+	xBackground
+-------------------------------- */
+body {
+	/* this is the page background */
+	background-color: $color-5;
+}
+
+
+/* --------------------------------
+	xPatterns
+-------------------------------- */
+.sg-box {
+	/* this is the container of various design elements - i.e. the 2 logo of the branding section */
+	border: 1px solid $color-4;
+	border-radius: 3px;
+	background: lighten($color-5, 5%);
+	box-shadow: 0 1px 1px rgba(#000, .05);
+	padding: 6px;
+}
+
+
+/* --------------------------------
+	xNavigation
+-------------------------------- */
+header {
+	background-color: $color-2;
+}
+
+.logo {
+	/* logo box style */
+	background-color: $brand;
+	width: 120px;
+
+	@include MQ(M) {
+		width: 180px;
+	}
+}
+
+.main-nav {
+	/* main navigation background color - full screen on small devices */
+	background: $color-2;
+	font-family: $secondary-font;
+	font-size: 2.4rem;
+	font-weight: 700;
+
+	li a {
+		color: $color-5;
+		border-color: lighten($color-2, 5%);
+	}
+
+	@include MQ(M) {
+		li a {
+			color: lighten($color-2, 40%);
+
+			&.selected {
+				color: $color-5;
+				box-shadow: 0 2px 0 $color-1;
+			}
+
+			&:hover {
+				color: $color-5;
+			}
+		}
+	}
+}
+
+.nav-trigger span {
+	/* hamburger menu */
+	background-color: $color-5;
+
+	&::before,
+	&::after {
+		/* upper and lower lines */
+		background-color: $color-5;
+	}
+}
+
+.nav-is-visible .nav-trigger span {
+	/* hide line in the center on mobile when nav is visible */
+	background-color: rgba($color-5, 0);
+
+	&::before, &::after {
+		/* preserve visibility of upper and lower lines - close icon */
+		background-color: rgba($color-5, 1);
+	}
+}
+
+
+/* --------------------------------
+	xPage title
+-------------------------------- */
+main > h1 {
+	color: $color-2;
+
+	@include MQ(L) {
+		/* title goes into the header on big devices */
+		color: $color-5;
+	}
+}
+
+
+/* --------------------------------
+	xTypography
+-------------------------------- */
+h1, h2 {
+	font-family: $secondary-font;
+	color: $color-2;
+}
+
+h1 {
+	font-size: 2.4rem;
+	font-weight: 700;
+	line-height: 1.2;
+	margin: 0 0 .4em;
+
+	@include MQ(S) {
+		font-size: 3.2rem;
+	}
+
+	@include MQ(M) {
+		font-size: 4rem;
+	}
+}
+
+h2 {
+	font-weight: 700;
+	text-transform: uppercase;
+	margin: 1em 0;
+
+	a {
+		text-transform: none;
+		font-size: 90%;
+		margin-left: 5px;
+	}
+
+	@include MQ(S) {
+		font-size: 1.8rem;
+		margin: 1em 0 1.4em;
+	}
+}
+
+section > h2::before {
+	/* number before each section title */
+	color: darken($color-4, 15%);
+}
+
+p {
+	font-size: 1.4rem;
+	line-height: 1.4;
+	color: lighten($color-2, 25%);
+
+	a {
+		color: $color-1;
+		text-decoration: underline;
+	}
+
+	@include MQ(S) {
+		font-size: 1.6rem;
+		line-height: 1.6;
+	}
+}
+
+
+/* --------------------------------
+	xButtons
+-------------------------------- */
+.btn {
+	border: none;
+	box-shadow: none;
+	border-radius: .25em;
+	font: {
+		size: 1.4rem;
+		family: $secondary-font;
+	}
+	color: $color-1;
+	padding: .6em 2.2em;
+	cursor: pointer;
+	background: $color-4;
+
+	&:focus {
+		outline: none;
+	}
+
+	&:hover {
+		background: lighten($color-4, 5%);
+	}
+
+	&.btn-success {
+		color: $color-5;
+		background: $success;
+
+		&:hover {
+			background: lighten($success, 5%);
+		}
+	}
+
+	&.btn-alert {
+		color: $color-5;
+		background: $alert;
+
+		&:hover {
+			background: lighten($alert, 5%);
+		}
+	}
+
+	&.btn-outline {
+		color: $color-1;
+		background: transparent;
+		box-shadow: inset 0 0 0 1px $color-1;
+
+		&:hover {
+			color: $color-5;
+			background: $color-1;
+		}
+	}
+
+	@include MQ(S) {
+		font-size: 1.6rem;
+	}
+}
+
+.sg-buttons .sg-box:nth-of-type(2) span {
+	/* CSS class name color */
+	color: $color-1;
+}
+
+
+/* --------------------------------
+	xIcons
+-------------------------------- */
+.fa {
+	color: lighten($color-2, 5%);
+}
+
+
+/* --------------------------------
+	xForm
+-------------------------------- */
+input[type=text], select {
+	border: 1px solid $color-4;
+	border-radius: .25em;
+	background: $color-5;
+
+	&:focus {
+		outline: none;
+	}
+}
+
+input[type=text] {
+	padding: .6em 1em;
+	box-shadow: inset 1px 1px rgba(#000, .03);
+
+	&.success {
+		border-color: $success;
+		box-shadow: 0 0 6px rgba($success, .2);
+	}
+
+	&.alert {
+		border-color: $alert;
+		box-shadow: 0 0 6px rgba($alert, .2);
+	}
+
+	&:focus {
+		border-color: $color-1;
+		box-shadow: 0 0 6px rgba($color-1, .2);
+	}
+}
+
+input[type=radio],
+input[type=checkbox] {
+	position: absolute;
+	left: 0;
+	top: 0;
+	margin: 0;
+	padding: 0;
+	opacity: 0;
+}
+
+.radio-label,
+.checkbox-label {
+	padding-left: 24px;
+	@include user-select(none);
+
+	&::before,
+	&::after {
+		/* custom radio and check boxes */
+		content: '';
+		display: block;
+		width: 16px;
+		height: 16px;
+		position: absolute;
+		top: 50%;
+		@include transform(translateY(-50%));
+	}
+
+	&::before {
+		left: 0;
+		border: 1px solid $color-4;
+		box-shadow: inset 1px 1px rgba(#000, .03);
+	}
+
+	&::after {
+		left: 3px;
+		background: url('../img/icon-check.svg') no-repeat center center;
+		display: none;
+	}
+}
+
+.radio-label::before {
+	border-radius: 50%;
+}
+
+.checkbox-label::before {
+	border-radius: 3px;
+}
+
+input[type=radio]:checked + label::before,
+input[type=checkbox]:checked + label::before {
+	background-color: darken($color-4, 5%);
+	border: none;
+	box-shadow: none;
+}
+
+input[type=radio]:checked + label::after,
+input[type=checkbox]:checked + label::after {
+	display: block;
+}
+
+.sg-select::after {
+	/* switcher arrow for select element */
+	content: '';
+	position: absolute;
+	z-index: 1;
+	right: 14px;
+	top: 50%;
+	@include transform(translateY(-50%));
+	display: block;
+	width: 16px;
+	height: 16px;
+	background: url('../img/icon-select.svg') no-repeat center center;
+	pointer-events: none;
+}
+
+select {
+	position: relative;
+	padding: .6em 2em .6em 1em;
+	cursor: pointer;
+	@include appearance(none);
+}
+
+@import 'basic-style';
