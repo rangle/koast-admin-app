@@ -17,12 +17,18 @@
   },
   "homepage": "https://github.com/rangle/koast-admin-app",
   "dependencies": {
-    "bower": "^1.3.12"
+    "bower": "^1.3.12",
+    "gulp-connect": "^2.2.0"
   },
   "devDependencies": {
     "colors": "^1.0.3",
+    "del": "^1.0.0",
     "gulp": "^3.8.10",
-    "gulp-watch": "^1.1.0",
+    "gulp-angular-filesort": "^1.0.4",
+    "gulp-bower": "0.0.7",
+    "gulp-inject": "^1.0.2",
+    "gulp-sass": "^1.1.0",
+    "gulp-watch": "~3.0",
     "rangle-gulp": "0.0.7",
     "run-sequence": "^1.0.2",
     "connect-livereload": "0.5.2",
@@ -32,7 +38,8 @@
     "gulp-concat": "2.4.2",
     "gulp-minify-css": "0.3.11",
     "gulp-rename": "1.2.0",
-    "node-bourbon": "1.2.3"
+    "node-bourbon": "1.2.3",
+    "through2": "^0.6.3"
   },
   "peerDependencies": {
     "koast": ">=0.4.5"

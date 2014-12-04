@@ -26,8 +26,6 @@ node_modules
 src/bower_components
 # Users Environment Variables
 .lock-wscript
-
-
 .idea/
 *.keystore
 *.sw*
@@ -39,3 +37,7 @@ Thumbs.db
 *.sublime-workspace
 .sass-cache
 src/css/
+*swp
+*swo
+*swn
+build
