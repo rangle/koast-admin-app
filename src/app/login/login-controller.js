@@ -1,6 +1,18 @@
 'use strict';
 angular.module('koastAdminApp')
-.controller('loginCtrl', function($scope, $log) {
-  $scope.login = function(username, password) {
+.controller('loginCtrl',['$scope','user','$location',function($scope,user,$location){
+  $scope.login = function(username,password) {
+    $scope.loggingIn = true;
+    user.login(username,password)
+    .then(function(){
+      $location.path('/');
+    })
+    .then(null,function(e){
+      $scope.error = 'Failed to login: ' + e;
+    })
+    .finally(function(){
+      $scope.loggingIn = false;
+    });
   };
-});
+}]);
+

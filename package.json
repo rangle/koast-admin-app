@@ -4,7 +4,8 @@
   "description": "Client app to admin a koast server.",
   "main": "",
   "scripts": {
-    "test": "gulp test"
+    "test": "gulp test",
+    "postinstall": "./node_modules/bower/bin/bower install"
   },
   "repository": {
     "type": "git",
@@ -22,23 +23,23 @@
   },
   "devDependencies": {
     "colors": "^1.0.3",
+    "connect-livereload": "0.5.2",
     "del": "^1.0.0",
     "gulp": "^3.8.10",
     "gulp-angular-filesort": "^1.0.4",
     "gulp-bower": "0.0.7",
-    "gulp-inject": "^1.0.2",
-    "gulp-sass": "^1.1.0",
-    "gulp-watch": "~3.0",
-    "rangle-gulp": "0.0.7",
-    "run-sequence": "^1.0.2",
-    "connect-livereload": "0.5.2",
-    "gulp-connect": "2.2.0",
-    "gulp-watch": "3.0.0",
-    "gulp-sass": "1.1.0",
     "gulp-concat": "2.4.2",
+    "gulp-connect": "2.2.0",
+    "gulp-inject": "^1.0.2",
     "gulp-minify-css": "0.3.11",
     "gulp-rename": "1.2.0",
+    "gulp-sass": "1.1.0",
+    "gulp-watch": "3.0.0",
+    "jsdoc": "^3.3.0-alpha10",
+    "ncp": "^1.0.1",
     "node-bourbon": "1.2.3",
+    "rangle-gulp": "0.0.7",
+    "run-sequence": "^1.0.2",
     "through2": "^0.6.3"
   },
   "peerDependencies": {

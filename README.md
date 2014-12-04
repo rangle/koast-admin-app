@@ -1,4 +1,4 @@
-koast-admin-app
+koast-admin-app ![](https://magnum-ci.com/status/e09e4cc94e3688586a0b9d3ea8250095.png)
 ===============
 
 client app to admin a [koast server](https://github.com/rangle/koast)
