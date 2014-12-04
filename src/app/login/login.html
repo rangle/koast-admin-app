@@ -1,0 +1,19 @@
+<div id='loginView'>
+  <h1>Login</h1>
+
+  <form id='loginForm'>
+    <div class='form-group'>
+      <label for='username'>Username</label>
+      <input class='form-control' ng-model='username' type="text" name="username" value="">  
+    <div>
+
+    <div class='form-group'>
+      <label for='password'>Password</label>
+      <input class='form-control' ng-model='password' type="text" name="password" value="">  
+    <div>
+
+    <div  class='form-group'>
+      <button id='submitButton' type='submit' class='btn btn-default' ng-click='login(username, password)'>Submit</button>
+    </div>
+  </form>
+<div>

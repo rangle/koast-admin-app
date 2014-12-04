@@ -1,21 +1,191 @@
+var fs = require('fs');
+var EventEmitter = require('events').EventEmitter;
 var gulp = require('gulp');
 var rg = require('rangle-gulp');
+var inject = require('gulp-inject');
 var colors = require('colors');
 var runSequence = require('run-sequence');
-var connect = require('gulp-connect');
+var angularFileSort = require('gulp-angular-filesort');
 var watch = require('gulp-watch');
-var concat = require('gulp-concat');
+var bower = require('gulp-bower');
 var sass = require('gulp-sass');
-var minifyCss = require('gulp-minify-css');
-var rename = require('gulp-rename');
+var del = require('del');
+var through = require('through2');
+var connect = require('gulp-connect');
+var bourbon = require('node-bourbon');
 
-var appFiles =  ['src/app/app.js','src/app/**/*.js', '!./src/app/**/*.test.js'];
-var styleGuideFiles = ['./src/style-guide/index.html', './src/style-guide/js/**/*.js', './src/style-guide/assets/**.*'];
-var testFiles =  ['src/app/app.js','src/app/**/*.js'];
+var sassFiles = ['src/app/**/*sass', 'src/app/**/*scss', 'src/scss/**/*'];
+var appHtml = ['src/app/**/*html', 'src/index.html'];
+var appJS = [
+  'src/app/app.js',
+  'src/app/services/*.js',
+  'src/app/**/*-directive.js',
+  'src/app/**/*-controller.js',
+  '!src/app/**/*.test.js'
+];
+
+// Rules associate file sets (globs) with specific pipelines, the watch and
+// build tasks then utilize these rules to perform the appropriate operations
+// on files when they are being prepared (when the build task is run) and when
+// a file maching one of the sets changes. Any file which does not match one of
+// the rules is ignored this is desireable since it provides a single location
+// to describe file transformations and also helps to enforce proper project
+// structure.
+
+var rules = [
+  new Rule({
+    files: [ 'src/style-guide/**/*', 'src/img/**/*' ],
+    description: [
+      gulp.dest.bind(gulp,('build')),
+    ]
+  }),
+  new Rule({
+    files: sassFiles,
+    description: [
+      sass.bind(null, {
+        errLogToConsole:true,
+        includePaths: bourbon.includePaths
+      }),
+      gulp.dest.bind(gulp,('build')),
+    ]
+  }),
+  new Rule({
+    files: appJS,
+    description: [
+      updateDepStream,
+      gulp.dest.bind(gulp, 'build')
+    ]
+  }),
+  new Rule({
+    files: appHtml,
+    description: [
+      genDepInjectStream,
+      gulp.dest.bind(gulp, 'build')
+    ]
+  })
+];
+
+// =================================================================================
+// Custom Streams
+// =================================================================================
+
+var depChange = new EventEmitter();
+
+//Passive stream which updates angular depedencies
+
+function updateDepStream () {
+  return through.obj(function(file, enc, cb) {
+    depChange.emit('changed');
+    var injector = inject (
+      gulp.src(appJS).pipe(angularFileSort()),
+      { relative: true }
+    );
+    gulp.src(appHtml, { base: 'src' } )
+      .pipe(through.obj(function(file, enc, cb) {
+        this.push(file);
+        cb();
+      }
+      ))
+      .pipe(injector)
+      .pipe(gulp.dest('build'));
+    this.push(file);
+    cb();
+  });
+};
+
+//Generates a dynamic dependency injector which listens for changes
+
+function genDepInjectStream () {
+  var injector = inject (
+    gulp.src(appJS).pipe(angularFileSort()),
+    { relative: true }
+  );
+  depChange.on('changed', function() {
+    injector.end();
+    injector = inject (
+      gulp.src(appJS).pipe(angularFileSort()),
+      { relative: true }
+    );
+  });
+
+  return through.obj(function(file, enc, cb) {
+    var stream = this;
+    injector.write(file);
+    injector.once('data', function flush(file) {
+      stream.push(file);
+      cb();
+    });
+  });
+};
+
+
+// =================================================================================
+// Util
+// =================================================================================
+
+//Convenience class for declaratively crafting pipelines
+
+function Rule(opts) {
+  for(var k in opts)
+    this[k] = opts[k];
+
+  this.createPipeline = function() {
+    var pipeline = this.description.map(function(f) { return f(); });
+    pipeline.reduce(function(a,b) { return a.pipe(b) });
+    return pipeline[0];
+  }
+};
+
+function setupAliases(aliases) {
+  for(var k in aliases)
+    for(var i=0;i<aliases[k].length;i++)
+      gulp.task(aliases[k][i], [k]);
+};
+
+// =================================================================================
+// Tasks
+// =================================================================================
+
+gulp.task('build', function () {
+  rules.forEach(function(rule) {
+    gulp.src(rule.files, { base: 'src' })
+      .pipe(rule.createPipeline());
+  });
+});
+
+gulp.task('watch', function (done) {
+  rules.forEach(function(rule) {
+    watch(rule.files, { base: 'src' })
+      .pipe(rule.createPipeline())
+      .pipe(connect.reload());
+  });
+  done();
+});
+
+gulp.task('prepare_bower', function (done) {
+  bower().on('end', function () {
+    fs.symlinkSync(__dirname + '/src/bower_components', 'build/bower_components');
+    done();
+  });
+});
+
+gulp.task('server', function () {
+  del.sync('build');
+  fs.mkdirSync('build');
+  runSequence('prepare_bower', 'build', 'watch');
+  connect.server({
+    root: 'build',
+    livereload: true
+  });
+});
+
+var appFiles = ['src/app/app.js', 'src/app/**/*.js', '!./src/app/**/*.test.js'];
+var testFiles = ['./src/app/**/*.test.js'];
 var karmaFile = './testing/karma.conf.js';
+
 var karamConfig = {
-  karmaConf : karmaFile,
-  files : testFiles,
+  karmaConf: karmaFile,
+  files: testFiles,
   vendor: [
     'src/bower_components/angular/angular.js',
     'src/bower_components/angular-mocks/angular-mocks.js',
@@ -25,72 +195,43 @@ var karamConfig = {
   ],
   showStack: true
 };
-gulp.task('dev',function(){
-  rg.connectWatch({
-    root : './src',
-    livereload : true,
-    glob : './src/**/*'
-  });
+
+gulp.task('karma', function() {
   rg.karmaWatch(karamConfig)();
 });
 
-gulp.task('jshint',rg.jshint({
-  files : appFiles
+gulp.task('dev', [ 'server', 'karma' ]);
+
+gulp.task('jshint', rg.jshint({
+  files: appFiles
 }));
 
-gulp.task('beautify',rg.beautify({
-  files : [appFiles[0]]
+gulp.task('beautify', rg.beautify({
+  files: [appFiles[0]]
 }));
 
-gulp.task('build',function(){
-  return runSequence('jshint','beautify');
+//Run this before comitting
+
+gulp.task('lint', function () {
+  return runSequence('jshint', 'beautify');
 });
 
-
-gulp.task('test',rg.karma(karamConfig));
-
-
-// Compile SASS for the style-guide
-gulp.task('style-guide-sass', function(done) {
-  gulp.src('./src/scss/style-guide.scss')
-    .pipe(sass({
-      includePaths: require('node-bourbon').includePaths
-    }))
-    .pipe(minifyCss({
-      keepSpecialComments: 0
-    }))
-    .pipe(rename({ extname: '.min.css' }))
-    .pipe(gulp.dest('./src/css/'))
-    .pipe(connect.reload())
-    .on('end', done);
-});
-
-
-gulp.task('style-guide', ['style-guide-sass'], function() {
-  // Start a server
-  connect.server({
-    root: 'src',
-    port: 3000,
-    livereload: true
-  });
-  console.log('[CONNECT] Listening on port 3000'.yellow.inverse);
-
-  // Watch HTML files for changes
-  console.log('[CONNECT] Watching files for live-reload'.blue);
-  watch(styleGuideFiles)
-    .pipe(connect.reload());
-
-  // Watch HTML files for changes
-  console.log('[CONNECT] Watching SASS files'.blue);
-  gulp.watch('./src/scss/*.scss', ['style-guide-sass']);
-});
-
-
-gulp.task('default', function() {
+gulp.task('default', function () {
   console.log('***********************'.yellow);
-  console.log('  gulp dev:'.magenta, 'start a server in the  root folder and watch dev files'.yellow);
-  console.log('  gulp test:'.magenta, 'run unit tests'.yellow);
-  console.log('  gulp build:'.magenta, 'hint, lint, and minify files into ./dist '.yellow);
-  console.log('  gulp style-guide:'.magenta, 'view/modify the style guide locally'.yellow);
+  console.log(
+    '  gulp server: Create build files (./build) and start a server which watches for changes'.yellow
+  );
+  console.log('  gulp test: run unit tests'.yellow);
+  console.log('  gulp build: hint, lint, and minify files into ./dist '.yellow);
   console.log('***********************'.yellow);
 });
+
+// =================================================================================
+// Aliases
+// =================================================================================
+
+var aliases = {
+  'server': [ 'serve' ]
+};
+
+setupAliases(aliases);

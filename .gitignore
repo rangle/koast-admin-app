@@ -26,8 +26,10 @@ node_modules
 src/bower_components
 # Users Environment Variables
 .lock-wscript
-
-
+*swp
+*swo
+*swn
+build
 .idea/
 *.keystore
 *.sw*

@@ -1,6 +1,6 @@
 'use strict';
 angular.module('koastAdminApp')
-.controller('MainCtrl',['$scope','$interval','koastBackup',function($scope,$interval,koastBackup){
+.controller('backupCtrl',['$scope','$interval','koastBackup',function($scope,$interval,koastBackup){
   koastBackup.getBackups()
     .then(function(backups){
       $scope.backups = backups;
