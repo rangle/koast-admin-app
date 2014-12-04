@@ -3,7 +3,8 @@
 describe('koast admin service:', function() {
   beforeEach(module('koastAdminApp.service'));
   beforeEach(module(function ($provide) {
-    $provide.service("$q", function() {return Q;});
+    $provide.service('$q', function() {return Q;});
+
   }));
 
   var koastAdmin;
@@ -30,7 +31,29 @@ describe('koast admin service:', function() {
           expect(i.routes).to.be.an('Array');
         });
       });
-    })
+    });
   });
 
+  describe('makeApiCall',function(){
+    it('should make the GET request',function(){
+      return koastAdmin.makeApiCall('TEST','test1',{})
+      .then(function(backups){
+        expect(backups).to.be.ok;
+      });
+    });
+
+    it('should make the POST request',function(){
+      return koastAdmin.makeApiCall('TEST','test2',{name:'test',type:'aws'},{})
+      .then(function(receipt){
+        expect(receipt).to.be.ok;
+      });
+    });
+
+    it('should make the PUT request',function(){
+      return koastAdmin.makeApiCall('TEST','test3',{name:'test',type:'aws'},{})
+      .then(function(receipt){
+        expect(receipt).to.be.ok;
+      });
+    });
+  });
 });

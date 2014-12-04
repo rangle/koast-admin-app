@@ -1,4 +1,4 @@
-var fs = require('fs');
+ var fs = require('fs');
 var EventEmitter = require('events').EventEmitter;
 var gulp = require('gulp');
 var rg = require('rangle-gulp');
@@ -63,6 +63,7 @@ var rules = [
     description: [
       gulp.dest.bind(gulp, 'build')
     ]
+
   })
 ];
 
@@ -181,7 +182,7 @@ gulp.task('server', function () {
 });
 
 var appFiles = ['src/app/app.js', 'src/app/**/*.js', '!./src/app/**/*.test.js'];
-var testFiles = ['./src/app/**/*.test.js'];
+var testFiles = ['src/app/app.js','./src/app/**/*.js'];
 var karmaFile = './testing/karma.conf.js';
 
 var karamConfig = {
@@ -199,6 +200,9 @@ var karamConfig = {
 
 gulp.task('karma', function() {
   rg.karmaWatch(karamConfig)();
+});
+gulp.task('test',function(){
+  rg.karma(karamConfig)();
 });
 
 gulp.task('dev', [ 'server', 'karma' ]);

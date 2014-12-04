@@ -31,9 +31,9 @@ angular.module('koastAdminApp', [
       $urlRouterProvider.otherwise('/');
     }
   ])
-  .run(function($state, $rootScope, koastAuth) {
+  .run(function($state, $rootScope, user) {
     $rootScope.$on('$stateChangeSuccess', function() {
-      if(!koastAuth.isAuthenticated && $state.current.name !== 'login') {
+      if(!user.isAuthenticated() && $state.current.name !== 'login') {
         $state.go('login', { redirect: $state.current });
       }
     });
@@ -43,5 +43,6 @@ angular.module('koastAdminApp.service', ['koast'])
   .value('ADMIN_DISCOVERY_PATH', 'TODO')
   .value('KOAST_ROOT', 'http://TODO/api/')
   .run(function (koastAdmin) {
+    //load the supported koast admin functionality and urls as soon as the app is loaded
     koastAdmin.load();
   });
