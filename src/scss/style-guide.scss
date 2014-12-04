@@ -1,41 +1,11 @@
-@import 'bourbon'; // http://bourbon.io/
-
-// Meyer's Reset
-@import 'reset';
-// responsive grid and media queries
-@import 'layout';
-
-// Font-awesome
-$fa-font-path: "/bower_components/fontawesome/fonts" !default;
-@import '../bower_components/fontawesome/scss/font-awesome';
-
-
-// Brand
-$brand  : #2f323a;
-
-$color-1: #6269AD;
-$color-2: #19191a;
-$color-3: #fb4e51;
-$color-4: #E8E9F3;
-$color-5: #fcfcfc;
-
-// Action Colours
-$success: #2fbf71;
-$alert: $color-3;
-
-// Fonts
-$primary-font: 'Open Sans', sans-serif;
-$secondary-font: 'PT Sans Narrow', sans-serif;
-
-
 /* --------------------------------
-	xBackground
--------------------------------- */
-body {
-	/* this is the page background */
-	background-color: $color-5;
-}
 
+  Style Guide
+
+-------------------------------- */
+@import 'bourbon';
+@import 'core/variables';
+@import 'core/layout';
 
 /* --------------------------------
 	xPatterns
@@ -49,74 +19,6 @@ body {
 	padding: 6px;
 }
 
-
-/* --------------------------------
-	xNavigation
--------------------------------- */
-header {
-	background-color: $color-2;
-}
-
-.logo {
-	/* logo box style */
-	background-color: $brand;
-	width: 120px;
-
-	@include MQ(M) {
-		width: 180px;
-	}
-}
-
-.main-nav {
-	/* main navigation background color - full screen on small devices */
-	background: $color-2;
-	font-family: $secondary-font;
-	font-size: 2.4rem;
-	font-weight: 700;
-
-	li a {
-		color: $color-5;
-		border-color: lighten($color-2, 5%);
-	}
-
-	@include MQ(M) {
-		li a {
-			color: lighten($color-2, 40%);
-
-			&.selected {
-				color: $color-5;
-				box-shadow: 0 2px 0 $color-1;
-			}
-
-			&:hover {
-				color: $color-5;
-			}
-		}
-	}
-}
-
-.nav-trigger span {
-	/* hamburger menu */
-	background-color: $color-5;
-
-	&::before,
-	&::after {
-		/* upper and lower lines */
-		background-color: $color-5;
-	}
-}
-
-.nav-is-visible .nav-trigger span {
-	/* hide line in the center on mobile when nav is visible */
-	background-color: rgba($color-5, 0);
-
-	&::before, &::after {
-		/* preserve visibility of upper and lower lines - close icon */
-		background-color: rgba($color-5, 1);
-	}
-}
-
-
 /* --------------------------------
 	xPage title
 -------------------------------- */
@@ -129,15 +31,9 @@ main > h1 {
 	}
 }
 
-
 /* --------------------------------
 	xTypography
 -------------------------------- */
-h1, h2 {
-	font-family: $secondary-font;
-	color: $color-2;
-}
-
 h1 {
 	font-size: 2.4rem;
 	font-weight: 700;
@@ -191,192 +87,299 @@ p {
 	}
 }
 
+.fa {
+	color: lighten($color-2, 5%);
+}
 
 /* --------------------------------
 	xButtons
 -------------------------------- */
-.btn {
-	border: none;
-	box-shadow: none;
-	border-radius: .25em;
-	font: {
-		size: 1.4rem;
-		family: $secondary-font;
-	}
-	color: $color-1;
-	padding: .6em 2.2em;
-	cursor: pointer;
-	background: $color-4;
-
-	&:focus {
-		outline: none;
-	}
-
-	&:hover {
-		background: lighten($color-4, 5%);
-	}
-
-	&.btn-success {
-		color: $color-5;
-		background: $success;
-
-		&:hover {
-			background: lighten($success, 5%);
-		}
-	}
-
-	&.btn-alert {
-		color: $color-5;
-		background: $alert;
-
-		&:hover {
-			background: lighten($alert, 5%);
-		}
-	}
-
-	&.btn-outline {
-		color: $color-1;
-		background: transparent;
-		box-shadow: inset 0 0 0 1px $color-1;
-
-		&:hover {
-			color: $color-5;
-			background: $color-1;
-		}
-	}
-
-	@include MQ(S) {
-		font-size: 1.6rem;
-	}
-}
-
 .sg-buttons .sg-box:nth-of-type(2) span {
 	/* CSS class name color */
 	color: $color-1;
 }
 
 
-/* --------------------------------
-	xIcons
--------------------------------- */
-.fa {
-	color: lighten($color-2, 5%);
-}
-
 
 /* --------------------------------
-	xForm
+	Basic Styles for the Style Guide
 -------------------------------- */
-input[type=text], select {
-	border: 1px solid $color-4;
-	border-radius: .25em;
-	background: $color-5;
 
-	&:focus {
-		outline: none;
-	}
-}
+/* xBranding section - basic style */
+.sg-branding {
 
-input[type=text] {
-	padding: .6em 1em;
-	box-shadow: inset 1px 1px rgba(#000, .03);
-
-	&.success {
-		border-color: $success;
-		box-shadow: 0 0 6px rgba($success, .2);
+	.sg-box {
+		margin-bottom: 1em;
 	}
 
-	&.alert {
-		border-color: $alert;
-		box-shadow: 0 0 6px rgba($alert, .2);
-	}
-
-	&:focus {
-		border-color: $color-1;
-		box-shadow: 0 0 6px rgba($color-1, .2);
-	}
-}
-
-input[type=radio],
-input[type=checkbox] {
-	position: absolute;
-	left: 0;
-	top: 0;
-	margin: 0;
-	padding: 0;
-	opacity: 0;
-}
-
-.radio-label,
-.checkbox-label {
-	padding-left: 24px;
-	@include user-select(none);
-
-	&::before,
-	&::after {
-		/* custom radio and check boxes */
-		content: '';
+	img {
 		display: block;
-		width: 16px;
-		height: 16px;
-		position: absolute;
-		top: 50%;
-		@include transform(translateY(-50%));
+		width: 100%;
 	}
 
-	&::before {
-		left: 0;
-		border: 1px solid $color-4;
-		box-shadow: inset 1px 1px rgba(#000, .03);
+	ul:last-of-type {
+		padding-top: .6em;
+
+		li {
+			display: inline-block;
+			margin-right: 1em;
+		}
+
+		li:nth-of-type(1) img {
+			width: 90px;
+			height: 90px;
+			border-radius: 1em;
+		}
+
+		li:nth-of-type(2) img {
+			width: 60px;
+			height: 60px;
+			border-radius: .6em;
+		}
+
+		li:nth-of-type(3) img {
+			width: 32px;
+			height: 32px;
+			border-radius: .4em;
+		}
+
+		li:nth-of-type(4) img {
+			width: 16px;
+			height: 16px;
+			border-radius: .2em;
+		}
 	}
 
-	&::after {
-		left: 3px;
-		background: url('../img/icon-check.svg') no-repeat center center;
-		display: none;
+	@include MQ(S) {
+		.sg-box {
+			@include column(.49);
+			margin: 0 2% 2em 0;
+
+			&:nth-of-type(2n) {
+				margin-right: 0;
+			}
+		}
+
+		ul:last-of-type {
+			clear: left;
+
+			li {
+				margin-right: 3em;
+			}
+		}
 	}
 }
 
-.radio-label::before {
-	border-radius: 50%;
+/* xColor section - basic style */
+.sg-colors {
+
+	li {
+		text-align: center;
+		@include column(.48);
+		margin: 0 4% 1em 0;
+
+		&:nth-of-type(2n) {
+			margin-right: 0;
+		}
+	}
+
+	.sg-color-swatch {
+		position: relative;
+		width: 100%;
+		padding: 50% 0;
+
+		&::before, &::after {
+			/* lighter and darker color shades of the same swatch */
+			content: '';
+			position: absolute;
+			bottom: 0;
+			width: 50%;
+			height: 20%;
+		}
+
+		&::before {
+			left: 0;
+		}
+
+		&::after {
+			right: 0;
+		}
+	}
+
+	b {
+		display: block;
+		padding: .6em 0;
+	}
+
+	li:nth-of-type(1) .sg-color-swatch {
+		background: $color-1;
+
+		&::before {
+			background: lighten($color-1, 5%);
+		}
+
+		&::after {
+			background: darken($color-1, 5%);
+		}
+	}
+
+	li:nth-of-type(2) .sg-color-swatch {
+		background: $color-2;
+
+		&::before {
+			background: lighten($color-2, 5%);
+		}
+
+		&::after {
+			background: darken($color-2, 5%);
+		}
+	}
+
+	li:nth-of-type(3) .sg-color-swatch {
+		background: $color-3;
+
+		&::before {
+			background: lighten($color-3, 5%);
+		}
+
+		&::after {
+			background: darken($color-3, 5%);
+		}
+	}
+
+	li:nth-of-type(4) .sg-color-swatch {
+		background: $color-4;
+
+		&::before {
+			background: lighten($color-4, 5%);
+		}
+
+		&::after {
+			background: darken($color-4, 5%);
+		}
+	}
+
+	li:nth-of-type(5) .sg-color-swatch {
+		background: $color-5;
+
+		&::before {
+			background: lighten($color-5, 5%);
+		}
+
+		&::after {
+			background: darken($color-5, 5%);
+		}
+	}
+
+	@include MQ(S) {
+		li {
+			@include column(.19);
+			margin: 0 1.25% 1em 0;
+
+			&:nth-of-type(2n) {
+				margin-right: 1.25%;
+			}
+
+			&:nth-of-type(5n) {
+				margin-right: 0;
+			}
+		}
+	}
 }
 
-.checkbox-label::before {
-	border-radius: 3px;
+.sg-typography .sg-box,
+.sg-buttons .sg-box,
+.sg-icons .sg-box,
+.sg-form .sg-box {
+	padding: 1em;
+
+	@include MQ(S) {
+		.sg-box {
+			padding: 2em;
+		}
+	}
 }
 
-input[type=radio]:checked + label::before,
-input[type=checkbox]:checked + label::before {
-	background-color: darken($color-4, 5%);
-	border: none;
-	box-shadow: none;
+/* xTypography section - basic style */
+.sg-typography {
+
+	h1::before {
+		content: 'Aa - ';
+		color: $color-1;
+	}
 }
 
-input[type=radio]:checked + label::after,
-input[type=checkbox]:checked + label::after {
-	display: block;
+.sg-buttons {
+	.sg-box:first-of-type {
+		border-bottom-left-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+
+	.sg-box:last-of-type {
+		margin-top: -1px;
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
+	}
+
+	button {
+		margin: .4em;
+	}
+
+	@include MQ(M) {
+		button {
+			margin: 1em;
+		}
+	}
 }
 
-.sg-select::after {
-	/* switcher arrow for select element */
-	content: '';
-	position: absolute;
-	z-index: 1;
-	right: 14px;
-	top: 50%;
-	@include transform(translateY(-50%));
-	display: block;
-	width: 16px;
-	height: 16px;
-	background: url('../img/icon-select.svg') no-repeat center center;
-	pointer-events: none;
+/* xIcons section - basic style */
+.sg-icons {
+	li {
+		display: inline-block;
+		background-position: center center;
+		background-repeat: no-repeat;
+		margin: 1em;
+	}
 }
 
-select {
-	position: relative;
-	padding: .6em 2em .6em 1em;
-	cursor: pointer;
-	@include appearance(none);
-}
+section {
+	margin: 3em 0;
+	@include clearfix;
 
-@import 'basic-style';
+	&:nth-of-type(1) h2::before {
+		content: '1. ';
+	}
+
+	&:nth-of-type(2) h2::before {
+		content: '2. ';
+	}
+
+	&:nth-of-type(3) h2::before {
+		content: '3. ';
+	}
+
+	&:nth-of-type(4) h2::before {
+		content: '4. ';
+	}
+
+	&:nth-of-type(5) h2::before {
+		content: '5. ';
+	}
+
+	&:nth-of-type(6) h2::before {
+		content: '6. ';
+	}
+
+	@include MQ(S) {
+		margin: 3em 0 5em;
+	}
+
+	@include MQ(L) {
+		@include column(.48);
+		margin: 0 4% 4em 0;
+
+		&:nth-of-type(2n) {
+			margin-right: 0;
+		}
+	}
+}

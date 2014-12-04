@@ -1,0 +1,46 @@
+/* --------------------------------
+
+  Page title
+
+-------------------------------- */
+.page-title {
+  text-align: center;
+  margin: 4em 0;
+
+  > h1 {
+    color: $color-2;
+    font-size: 2.4rem;
+    font-weight: 700;
+    line-height: 1.2;
+
+    @include MQ(S) {
+      font-size: 3.2rem;
+    }
+
+    @include MQ(M) {
+      font-size: 4rem;
+    }
+
+    @include MQ(L) {
+      /* title goes into the header on big devices */
+      color: $color-5;
+    }
+  }
+
+  @include MQ(L) {
+    max-width: none;
+    padding: 120px 0 50px;
+
+    > h1 {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      height: 80px;
+      line-height: 80px;
+      width: 400px;
+      margin: 0 0 0 -200px;
+      font-size: 2.6rem;
+      z-index: 20;
+    }
+  }
+}

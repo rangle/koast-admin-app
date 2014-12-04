@@ -1,0 +1,157 @@
+/* --------------------------------
+
+  Form
+
+-------------------------------- */
+form {
+  * + * {
+    margin-top: 0.5em;
+  }
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  color: lighten($black, 5%);
+}
+
+.input-wrapper {
+  position: relative;
+  display: block;
+  margin: 1em;
+}
+
+/* --------------------------------
+  Text Input
+-------------------------------- */
+input[type=text], select {
+  border: 1px solid $color-4;
+  border-radius: .25em;
+  background: $color-5;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+input[type=text] {
+  padding: .6em 1em;
+  box-shadow: inset 1px 1px rgba(#000, .03);
+
+  &.success {
+    border-color: $success;
+    box-shadow: 0 0 6px rgba($success, .2);
+  }
+
+  &.alert {
+    border-color: $alert;
+    box-shadow: 0 0 6px rgba($alert, .2);
+  }
+
+  &:focus {
+    border-color: $color-1;
+    box-shadow: 0 0 6px rgba($color-1, .2);
+  }
+}
+
+
+/* --------------------------------
+  Radio and Checkbox
+-------------------------------- */
+input[type=radio],
+input[type=checkbox] {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+}
+
+.radio-label,
+.checkbox-label {
+  padding-left: 24px;
+  font-weight: 400;
+  @include user-select(none);
+
+  &::before,
+  &::after {
+    /* custom radio and check boxes */
+    content: '';
+    display: block;
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    top: 50%;
+    @include transform(translateY(-50%));
+  }
+
+  &::before {
+    left: 0;
+    border: 1px solid $color-4;
+    box-shadow: inset 1px 1px rgba(#000, .03);
+  }
+
+  &::after {
+    left: 3px;
+    background: url('../img/icon-check.svg') no-repeat center center;
+    display: none;
+  }
+}
+
+.radio-label::before {
+  border-radius: 50%;
+}
+
+.checkbox-label::before {
+  border-radius: 3px;
+}
+
+input[type=radio]:checked + label::before,
+input[type=checkbox]:checked + label::before {
+  background-color: darken($color-4, 5%);
+  border: none;
+  box-shadow: none;
+}
+
+input[type=radio]:checked + label::after,
+input[type=checkbox]:checked + label::after {
+  display: block;
+}
+
+/* --------------------------------
+  Select
+-------------------------------- */
+.select-container::after {
+  /* switcher arrow for select element */
+  content: '';
+  position: absolute;
+  z-index: 1;
+  right: 14px;
+  top: 50%;
+  @include transform(translateY(-50%));
+  display: block;
+  width: 16px;
+  height: 16px;
+  background: url('../img/icon-select.svg') no-repeat center center;
+  pointer-events: none;
+}
+
+select {
+  position: relative;
+  padding: .6em 2em .6em 1em;
+  cursor: pointer;
+  @include appearance(none);
+
+  &::-ms-expand {
+    display: none;
+  }
+}
+
+
+@-moz-document url-prefix(){
+  /* hide custom arrow on Firefox */
+  .select-container::after {
+    display: none;
+  }
+}

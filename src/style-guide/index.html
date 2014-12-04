@@ -4,8 +4,9 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!-- styles -->
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700|family=PT+Sans+Narrow:700' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" href="/css/style-guide.min.css">
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,600,300,700,800|family=PT+Sans+Narrow:700' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="/scss/app.css">
+	<link rel="stylesheet" href="/scss/style-guide.css">
 	<!-- title -->
 	<title>koast Style Guide</title>
 	<!-- favicon -->
@@ -34,7 +35,9 @@
 	</header>
 
 	<main>
-		<h1>Style Guide 1.0</h1>
+		<div class="page-title">
+			<h1>Style Guide 1.0</h1>
+		</div>
 
 		<section id="branding" class="sg-branding">
 			<h2>Branding</h2>
@@ -92,9 +95,9 @@
 
 			<div class="sg-box">
 				<button class="btn">Normal</button>
-				<button class="btn btn-success">Success</button>
-				<button class="btn btn-alert">Alert</button>
-				<button class="btn btn-outline">Outline</button>
+				<button class="btn btn--success">Success</button>
+				<button class="btn btn--alert">Alert</button>
+				<button class="btn btn--outline">Outline</button>
 			</div>
 		</section>
 
@@ -144,24 +147,24 @@
 					</fieldset>
 
 					<fieldset>
-						<div class="sg-input-wrapper">
+						<div class="input-wrapper">
 							<input type="radio" name="radioButton" id="radio1">
-	      					<label class="radio-label" for="radio1">Choice 1</label>
-      					</div>
+	      			<label class="radio-label" for="radio1">Choice 1</label>
+      			</div>
 
-						<div class="sg-input-wrapper">
+						<div class="input-wrapper">
 							<input type="checkbox" id="checkbox1">
-	      					<label class="checkbox-label" for="checkbox1">Option 1</label>
-      					</div>
+	      			<label class="checkbox-label" for="checkbox1">Option 1</label>
+      			</div>
 
-						<div class="sg-input-wrapper sg-select">
-	      					<select name="select-this" id="select-this">
-					          <option value="0">Select</option>
-					          <option value="1">Option 1</option>
-					          <option value="2">Option 2</option>
-					          <option value="2">Option 3</option>
-					      	</select>
-				      	</div>
+						<div class="input-wrapper select-container">
+    					<select name="select-this" id="select-this">
+			          <option value="0">Select</option>
+			          <option value="1">Option 1</option>
+			          <option value="2">Option 2</option>
+			          <option value="2">Option 3</option>
+			      	</select>
+		      	</div>
 					</fieldset>
 				</form>
 			</div>

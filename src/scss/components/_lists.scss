@@ -1,0 +1,37 @@
+/* --------------------------------
+
+  Lists
+
+-------------------------------- */
+.item-list {
+  list-style: none;
+  @include transition(all $base-anim-dur cubic-bezier(0.455, 0.03, 0.515, 0.955));
+  border: 1px solid darken($light-grey, 5%);
+  border-radius: $base-radius;
+  background-color: #fff;
+  overflow: hidden;
+  margin-bottom: 1.5em;
+
+  li {
+    padding: 1em .6em;
+    margin: 0;
+    vertical-align: bottom;
+    font-size: 1.8rem;
+    line-height: 1.2;
+
+    &:not(:last-of-type) {
+      border-bottom: 1px solid darken($light-grey, 5%);
+    }
+
+    &:hover {
+      background-color: lighten($light-grey, 5%);
+    }
+
+    .btn {
+      display: inline-block;
+      float: right;
+      font-size: 1.2rem;
+      padding: .2em 1.2em;
+    }
+  }
+}

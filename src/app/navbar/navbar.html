@@ -1,0 +1,14 @@
+<header ng-class="{ 'nav-is-visible': navIsVisible }">
+  <div class="logo"><img src="/img/logo.svg" alt="koast"></div>
+
+  <nav>
+    <!-- main-nav -->
+    <ul class="main-nav">
+      <li ng-repeat="link in links" ng-click="hideNav()">
+        <a ui-sref-active="selected" ui-sref="{{link.ref}}">{{link.title}}</a>
+      </li>
+    </ul>
+  </nav>
+
+  <a href="" ng-click="toggleNav()" class="nav-trigger">Menu<span></span></a>
+</header>

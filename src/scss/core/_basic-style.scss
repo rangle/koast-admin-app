@@ -1,0 +1,84 @@
+/* --------------------------------
+
+	Basic Styles
+
+-------------------------------- */
+*, *::after, *::before {
+	@include box-sizing(border-box);
+}
+
+html {
+	font-size: 62.5%;
+}
+
+body {
+	font-size: 1.6rem;
+	font-family: $primary-font;
+	background-color: $color-5;
+	color: $color-2;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: $secondary-font;
+	color: $color-2;
+	font-weight: bold;
+}
+
+a {
+	text-decoration: none;
+	color: $color-1;
+}
+
+img {
+	max-width: 100%;
+}
+
+input, textarea, select {
+	font-family: $primary-font;
+	font-size: 1.6rem;
+}
+
+strong {
+	font-weight: bold;
+}
+
+header {
+	position: fixed;
+	height: 50px;
+	width: 100%;
+	top: 0;
+	left: 0;
+	box-shadow: 0 1px 1px rgba(#000, .1);
+	z-index: 10;
+
+	nav {
+		display: inline-block;
+	}
+
+	@include MQ(M) {
+		height: 80px;
+		@include clearfix;
+	}
+}
+
+.logo {
+	display: inline-block;
+	height: 100%;
+	position: relative;
+
+	img {
+		position: absolute;
+		display: block;
+		top: 50%;
+		left: 50%;
+		@include transform(translateX(-50%) translateY(-50%));
+	}
+
+	@include MQ(L) {
+		margin-left: 5%;
+	}
+}
+
+.heart {
+	color: $alert;
+}

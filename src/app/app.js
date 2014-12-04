@@ -1,18 +1,21 @@
 'use strict';
 
+angular.module('koastAdminApp.directives', []);
 
 angular.module('koastAdminApp', [
     'ui.router',
-    'koastAdminApp.service'
+    'ngAnimate',
+    'koastAdminApp.service',
+    'koastAdminApp.directives'
   ])
   .controller('mainCtrl', function() {
   })
   .config(['$stateProvider', '$urlRouterProvider',
     function ($stateProvider, $urlRouterProvider) {
       $stateProvider
-        .state('welcome', {
+        .state('home', {
           url: '/',
-          templateUrl: 'app/welcome.html'
+          templateUrl: 'app/home/home.html'
         })
         .state('login', {
           url: '/login',
@@ -22,7 +25,7 @@ angular.module('koastAdminApp', [
         .state('backup', {
           url: '/backup',
           templateUrl: 'app/backup/backup.html',
-          controller: 'backupCtrl'
+          controller: 'backupCtrl as backupCtrl'
         });
 
       $urlRouterProvider.otherwise('/');

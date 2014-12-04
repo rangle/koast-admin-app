@@ -1,31 +1,98 @@
-<h6>Backups</h6>
-<li ng-repeat="backup in backups">
-  {{backup}}<button ng-click="restoreBackup(backup.id)" ng-disabled="restoringBackup">RESTORE</button>
-</li>
-<h5 ng-show="restoringBackup">Restoring {{restoringName}}({{restoringPercent}}% complete) ....</h5>
-<div ng-show="!backups || backups.length === 0">
-  no backups found.
+<div class="page-title">
+  <h1>Backups</h1>
 </div>
-<br/>
-<h3> Create a Backup</h3>
-<label>Name: </label>
-<input type="text" ng-model="backupName"/>
-<br />
-<div class="form-group add-bottom">
-  <label>Type: </label>
-  <div class="radio">
-    <label>
-    <input type="radio" name="aws" value="aws" ng-model="backupType">
-      AWS
-    </label>
-  </div>
-  <div class="radio">
-    <label>
-      <input type="radio" name="localFS" ng-model="backupType" value="local">
-        local file system
-    </label>
+
+<!-- Backup notification -->
+<div ng-show="restoringBackup" class="alert--progress animate-scale--r-b">
+  <strong>Restoring {{restoringName}}</strong> &hellip; {{restoringPercent}}% complete
+</div>
+
+<p class="add-bottom text-right">
+  <button ng-click="backupCtrl.toggleModal()"
+          class="btn btn--success">
+            <i class="fa fa-plus"></i>
+            Create New Backup
+  </button>
+</p>
+
+<!-- List of backups -->
+<ul class="item-list">
+  <li ng-repeat="backup in backups">
+    {{backup.name}}
+    <button class="btn btn--outline"
+            ng-click="restoreBackup(backup.id)"
+            ng-disabled="restoringBackup">restore</button>
+  </li>
+</ul>
+
+<div class="empty-state" ng-show="!backups || backups.length === 0">
+  <div class="empty-state__tag">
+    <!-- Icon -->
+    <i class="fa fa-database fa-5x"></i>
+    <!-- Main Title -->
+    <h3 class="empty-state__title">No backups found</h3>
   </div>
 </div>
-<br/>
-<button ng-click="createBackup(backupName,backupType)" ng-disabled="creatingBackup">CREATE</button>
-<h5 ng-show="creatingBackup">Backing up({{percent}}% complete) ....</h5>
+
+<!-- New Backup Modal -->
+<div ng-class="{ false: 'modal', true: 'modal--show' }[backupCtrl.isModalVisible]">
+  <!-- Overlay -->
+  <div class="overlay" ng-click="backupCtrl.toggleModal()"></div>
+
+  <!-- Modal Content -->
+  <div class="modal__contents modal--transition">
+    <!-- Close button -->
+    <h3 class="modal__header">
+      <a class="modal__close" href="" ng-click="backupCtrl.toggleModal()">&times;</a>
+      Create a Backup
+    </h3>
+
+    <form>
+      <fieldset>
+        <div class="input-wrapper">
+          <label>Name</label>
+          <input type="text" ng-model="backupName"/>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <div class="input-wrapper">
+          <label>Type</label>
+        </div>
+        <div class="input-wrapper">
+          <input type="radio"
+                 name="aws"
+                 value="aws"
+                 ng-model="backupType"
+                 id="aws">
+          <label class="radio-label" for="aws">AWS</label>
+        </div>
+        <div class="input-wrapper">
+          <input type="radio"
+                 name="localFS"
+                 value="local"
+                 ng-model="backupType"
+                 id="localFS">
+          <label class="radio-label" for="localFS">Choice 2</label>
+        </div>
+      </fieldset>
+
+      <div ng-show="creatingBackup" class="alert--progress animate-scale--l-c">
+        <strong>Backing up {{restoringName}}</strong> &hellip; {{percent}}% complete
+      </div>
+
+      <div ng-hide="creatingBackup" class="input-wrapper animate-scale--l-c">
+        <button class="btn"
+                ng-click="backupCtrl.toggleModal()">
+                  Cancel
+        </button>
+        <button class="btn btn--success"
+                ng-click="createBackup(backupName, backupType)"
+                ng-disabled="creatingBackup">
+                  Create
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

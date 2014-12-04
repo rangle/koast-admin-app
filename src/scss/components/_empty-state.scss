@@ -1,0 +1,18 @@
+/* --------------------------------
+
+  Empty State
+
+-------------------------------- */
+.empty-state {
+  height: 300px;
+  text-align: center;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  border-radius: $base-radius;
+  background-color: #fff;
+  color: $grey;
+}
+
+.empty-state__title { color: $grey; }
+
+.empty-state__tag { @extend %vertical-align; }
