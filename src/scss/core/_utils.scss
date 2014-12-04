@@ -1,0 +1,45 @@
+/* --------------------------------
+
+  Utils
+
+-------------------------------- */
+.add-bottom {
+  margin-bottom: 1.5em;
+}
+
+.text-center {
+  text-align: center;
+}
+.text-left {
+  text-align: left;
+}
+.text-right {
+  text-align: right;
+}
+
+.pull-left {
+  float: left;
+}
+
+.pull-right {
+  float: right;
+}
+
+.thumbnail {
+  padding: 5px;
+  border-radius: $base-radius;
+  border: 1px solid darken($color-4, 5%);
+}
+
+%vertical-align {
+  position: relative;
+  top: 50%;
+  @include transform(translateY(-50%));
+}
+
+
+%center {
+  top: 50%;
+  left: 50%;
+  @include transform(translate3d(-50%, -50%, 0));
+}

@@ -1,0 +1,36 @@
+/* --------------------------------
+
+  Alerts
+
+-------------------------------- */
+%alert {
+  width: 100%;
+  padding: 2*$base-padding;
+  border: 1px solid currentColor;
+  border-radius: $base-radius;
+  margin-bottom: 1.5em;
+}
+
+.alert--danger {
+  color: lighten($alert, 5%);
+  background-color: lighten($alert, 33%);
+  @extend %alert;
+}
+
+.alert--success {
+  color: lighten($success, 5%);
+  background-color: lighten($success, 50%);
+  @extend %alert;
+}
+
+.alert--warn {
+  color: lighten($orange, 5%);
+  background-color: lighten($orange, 40%);
+  @extend %alert;
+}
+
+.alert--progress {
+  color: lighten($color-1, 5%);
+  background-color: lighten($color-1, 42%);
+  @extend %alert;
+}

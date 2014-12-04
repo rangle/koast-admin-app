@@ -10,11 +10,11 @@ var watch = require('gulp-watch');
 var bower = require('gulp-bower');
 var sass = require('gulp-sass');
 var del = require('del');
-var cp = require('ncp').ncp;
 var through = require('through2');
 var connect = require('gulp-connect');
 
-var sassFiles = ['src/app/**/*sass', 'src/app/**/*scss'];
+var sassFiles = ['src/scss/*.scss'];
+var imgFiles = ['src/img/*'];
 var htmlFiles = ['src/app/**/*html', 'src/index.html'];
 var angularFiles = [
   'src/app/app.js',
@@ -36,24 +36,33 @@ var rules = [
   new Rule({
     files: sassFiles,
     description: [
-      sass.bind(null, {errLogToConsole:true}),
+      sass.bind(null, {
+        errLogToConsole:true,
+        includePaths: require('node-bourbon').includePaths,
+      }),
       gulp.dest.bind(gulp,('build')),
       connect.reload.bind(connect)
     ]
   }),
-  new Rule({ 
-    files: angularFiles, 
-    description: [ 
+  new Rule({
+    files: angularFiles,
+    description: [
       updateDepStream,
-      gulp.dest.bind(gulp, 'build') 
-    ] 
+      gulp.dest.bind(gulp, 'build')
+    ]
   }),
-  new Rule({ 
-    files: htmlFiles, 
-    description: [ 
+  new Rule({
+    files: htmlFiles,
+    description: [
       genDepInjectStream,
-      gulp.dest.bind(gulp, 'build') 
-    ] 
+      gulp.dest.bind(gulp, 'build')
+    ]
+  }),
+  new Rule({
+    files: imgFiles,
+    description: [
+      gulp.dest.bind(gulp, 'build')
+    ]
   })
 ];
 
@@ -69,7 +78,7 @@ function updateDepStream () {
   return through.obj(function(file, enc, cb) {
     depChange.emit('changed');
     var injector = inject (
-      gulp.src(angularFiles).pipe(angularFileSort()), 
+      gulp.src(angularFiles).pipe(angularFileSort()),
       { relative: true }
     );
     gulp.src(htmlFiles, { base: 'src' } )
@@ -89,13 +98,13 @@ function updateDepStream () {
 
 function genDepInjectStream () {
   var injector = inject (
-    gulp.src(angularFiles).pipe(angularFileSort()), 
+    gulp.src(angularFiles).pipe(angularFileSort()),
     { relative: true }
   );
   depChange.on('changed', function() {
     injector.end();
     injector = inject (
-      gulp.src(angularFiles).pipe(angularFileSort()), 
+      gulp.src(angularFiles).pipe(angularFileSort()),
       { relative: true }
     );
   });
@@ -115,10 +124,10 @@ function genDepInjectStream () {
 // Util
 // =================================================================================
 
-//Convenience class for declaratively crafting pipelines 
+//Convenience class for declaratively crafting pipelines
 
 function Rule(opts) {
-  for(var k in opts) 
+  for(var k in opts)
     this[k] = opts[k];
 
   this.createPipeline = function() {

@@ -1,6 +1,21 @@
 'use strict';
 angular.module('koastAdminApp')
 .controller('backupCtrl',['$scope','$interval','koastBackup',function($scope,$interval,koastBackup){
+
+
+  var vm = this;
+
+  koastBackup.getBackups()
+    .then(function(backups){
+      $scope.backups = backups;
+    });
+
+  vm.isModalVisible = false;
+
+  vm.toggleModal = function() {
+    vm.isModalVisible = !vm.isModalVisible;
+  };
+
   koastBackup.getBackups()
     .then(function(backups){
       $scope.backups = backups;
@@ -25,6 +40,7 @@ angular.module('koastAdminApp')
   $scope.$watch('percent',function(newVal){
     if(newVal >= 100){
       $interval.cancel(backingupInterval);
+      vm.toggleModal();
       $scope.creatingBackup = false;
     }
   });

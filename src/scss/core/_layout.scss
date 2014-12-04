@@ -1,3 +1,8 @@
+/* --------------------------------
+
+  Layout
+
+-------------------------------- */
 // breakpoints
 $S:     768px;
 $M:     1024px;
@@ -16,8 +21,19 @@ $L:     1600px;
   }
 }
 
-// super light grid - it works with the .cd-container class inside style.scss
+// super light grid
 @mixin column($percentage, $float-direction:left) {
   width: 100% * $percentage;
   float: $float-direction;
+}
+
+main {
+  width: 90%;
+  max-width: $M;
+  margin: 0 auto;
+  padding: 50px 0;
+
+  @include MQ(M) {
+    padding-top: 80px;
+  }
 }

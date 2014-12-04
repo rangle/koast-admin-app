@@ -1,7 +1,11 @@
 'use strict';
 
 angular.module('koastAdminApp.service')
-.service('koastAdmin', function(_koastHttp,KOAST_ROOT,ADMIN_DISCOVERY_PATH){
+.service('koastAdmin', [
+  'koastAdmin_HTTP_MOCK',
+  'KOAST_ROOT',
+  'ADMIN_DISCOVERY_PATH',
+function(_koastHttp,KOAST_ROOT,ADMIN_DISCOVERY_PATH){
   var supportedFunctionality;
   var service = {
     load : function(){
@@ -14,7 +18,7 @@ angular.module('koastAdminApp.service')
 
   };
   return service;
-})
+}])
 //SR: this a tmp mock while awating the server implementation
 //once koast has this functionality, this mock should be moved to the unit test file to be used there
 .service('koastAdmin_HTTP_MOCK',['$q',function($q){

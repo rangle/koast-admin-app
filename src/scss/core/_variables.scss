@@ -1,0 +1,42 @@
+/* --------------------------------
+
+  Variables
+
+-------------------------------- */
+// Brand
+$brand  : #2f323a;
+
+$color-1: #6269AD;
+$color-2: #19191a;
+$color-3: #fb4e51;
+$color-4: #E8E9F3;
+$color-5: #fcfcfc;
+
+// Give the above colours contextual names
+$purple: #6269AD;
+$black: #19191a;
+$light-grey: #E8E9F3;
+$white: #fcfcfc;
+
+// Action Colours
+$success: #2fbf71;
+$alert: $color-3;
+$orange: #F7B32B;
+$yellow: #FEE100;
+
+// State Colours
+$grey: #bdc3c7;
+
+// Fonts
+$primary-font: 'Open Sans', sans-serif;
+$secondary-font: 'PT Sans Narrow', sans-serif;
+$fa-font-path: "/bower_components/fontawesome/fonts" !default;
+
+$base-radius: 3px;
+$base-padding: 12px;
+$base-anim-dur: 300ms;
+$cubic: cubic-bezier(0.455, 0.03, 0.515, 0.955);
+
+// z-indices
+$nav-z-index   : 1000;
+$modal-z-index : 1001;
