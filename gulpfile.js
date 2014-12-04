@@ -10,13 +10,13 @@ var watch = require('gulp-watch');
 var bower = require('gulp-bower');
 var sass = require('gulp-sass');
 var del = require('del');
-var cp = require('ncp').ncp;
 var through = require('through2');
 var connect = require('gulp-connect');
+var bourbon = require('node-bourbon');
 
-var sassFiles = ['src/app/**/*sass', 'src/app/**/*scss'];
-var htmlFiles = ['src/app/**/*html', 'src/index.html'];
-var angularFiles = [
+var sassFiles = ['src/app/**/*sass', 'src/app/**/*scss', 'src/scss/**/*'];
+var appHtml = ['src/app/**/*html', 'src/index.html'];
+var appJS = [
   'src/app/app.js',
   'src/app/services/*.js',
   'src/app/**/*-directive.js',
@@ -24,36 +24,44 @@ var angularFiles = [
   '!src/app/**/*.test.js'
 ];
 
-//Rules associate file sets (globs) with specific pipelines, the watch and
-//build tasks then utilize these rules to perform the appropriate operations on
-//files when they are being prepared (when the build task is run) and when a
-//file maching one of the sets changes. Any file which does not match one of
-//the rules is ignored this is desireable since it provides a single location
-//to describe file transformations and also helps to enforce proper project
-//structure.
+// Rules associate file sets (globs) with specific pipelines, the watch and
+// build tasks then utilize these rules to perform the appropriate operations
+// on files when they are being prepared (when the build task is run) and when
+// a file maching one of the sets changes. Any file which does not match one of
+// the rules is ignored this is desireable since it provides a single location
+// to describe file transformations and also helps to enforce proper project
+// structure.
 
 var rules = [
   new Rule({
-    files: sassFiles,
+    files: [ 'src/style-guide/**/*', 'src/img/**/*' ],
     description: [
-      sass.bind(null, {errLogToConsole:true}),
       gulp.dest.bind(gulp,('build')),
-      connect.reload.bind(connect)
     ]
   }),
-  new Rule({ 
-    files: angularFiles, 
-    description: [ 
-      updateDepStream,
-      gulp.dest.bind(gulp, 'build') 
-    ] 
+  new Rule({
+    files: sassFiles,
+    description: [
+      sass.bind(null, {
+        errLogToConsole:true,
+        includePaths: bourbon.includePaths
+      }),
+      gulp.dest.bind(gulp,('build')),
+    ]
   }),
-  new Rule({ 
-    files: htmlFiles, 
-    description: [ 
+  new Rule({
+    files: appJS,
+    description: [
+      updateDepStream,
+      gulp.dest.bind(gulp, 'build')
+    ]
+  }),
+  new Rule({
+    files: appHtml,
+    description: [
       genDepInjectStream,
-      gulp.dest.bind(gulp, 'build') 
-    ] 
+      gulp.dest.bind(gulp, 'build')
+    ]
   })
 ];
 
@@ -69,10 +77,10 @@ function updateDepStream () {
   return through.obj(function(file, enc, cb) {
     depChange.emit('changed');
     var injector = inject (
-      gulp.src(angularFiles).pipe(angularFileSort()), 
+      gulp.src(appJS).pipe(angularFileSort()),
       { relative: true }
     );
-    gulp.src(htmlFiles, { base: 'src' } )
+    gulp.src(appHtml, { base: 'src' } )
       .pipe(through.obj(function(file, enc, cb) {
         this.push(file);
         cb();
@@ -85,17 +93,17 @@ function updateDepStream () {
   });
 };
 
-//Generate a dynamic dependency injector which listens for changes
+//Generates a dynamic dependency injector which listens for changes
 
 function genDepInjectStream () {
   var injector = inject (
-    gulp.src(angularFiles).pipe(angularFileSort()), 
+    gulp.src(appJS).pipe(angularFileSort()),
     { relative: true }
   );
   depChange.on('changed', function() {
     injector.end();
     injector = inject (
-      gulp.src(angularFiles).pipe(angularFileSort()), 
+      gulp.src(appJS).pipe(angularFileSort()),
       { relative: true }
     );
   });
@@ -115,10 +123,10 @@ function genDepInjectStream () {
 // Util
 // =================================================================================
 
-//Convenience class for declaratively crafting pipelines 
+//Convenience class for declaratively crafting pipelines
 
 function Rule(opts) {
-  for(var k in opts) 
+  for(var k in opts)
     this[k] = opts[k];
 
   this.createPipeline = function() {
@@ -223,7 +231,7 @@ gulp.task('default', function () {
 // =================================================================================
 
 var aliases = {
-  'server': ['serve' ]
+  'server': [ 'serve' ]
 };
 
 setupAliases(aliases);
