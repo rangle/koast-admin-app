@@ -1,4 +1,4 @@
- var fs = require('fs');
+var fs = require('fs');
 var EventEmitter = require('events').EventEmitter;
 var gulp = require('gulp');
 var rg = require('rangle-gulp');
@@ -12,7 +12,11 @@ var sass = require('gulp-sass');
 var del = require('del');
 var through = require('through2');
 var connect = require('gulp-connect');
+var minifyCss = require('gulp-minify-html');
+var minifyHtml = require('gulp-minify-css');
+var minifyJs = require('gulp-uglify');
 
+var styleGuide = ['src/style-guide/**/*'];
 var sassFiles = ['src/scss/*.scss'];
 var imgFiles = ['src/img/*'];
 var htmlFiles = ['src/app/**/*html', 'src/index.html'];
@@ -24,46 +28,76 @@ var angularFiles = [
   '!src/app/**/*.test.js'
 ];
 
-//Rules associate file sets (globs) with specific pipelines, the watch and
-//build tasks then utilize these rules to perform the appropriate operations on
-//files when they are being prepared (when the build task is run) and when a
-//file maching one of the sets changes. Any file which does not match one of
-//the rules is ignored this is desireable since it provides a single location
-//to describe file transformations and also helps to enforce proper project
-//structure.
+// Rules associate file sets (globs) with specific pipelines, the watch and
+// build tasks then utilize these rules to perform the appropriate operations
+// on files when they are being prepared (when the build task is run) and when
+// a file maching one of the sets changes. Any file which does not match one of
+// the rules is ignored this is desireable since it provides a single location
+// to describe file transformations and also helps to enforce proper project
+// structure.
 
-var rules = [
+var bldRules = [
+  new Rule({
+    files: styleGuide,
+    opts: { base: 'src' },
+    description: []
+  }),
   new Rule({
     files: sassFiles,
+    opts: { dest: 'css' },
     description: [
       sass.bind(null, {
         errLogToConsole:true,
         includePaths: require('node-bourbon').includePaths,
-      }),
-      gulp.dest.bind(gulp,('build')),
-      connect.reload.bind(connect)
+      })
     ]
   }),
   new Rule({
     files: angularFiles,
-    description: [
-      updateDepStream,
-      gulp.dest.bind(gulp, 'build')
-    ]
+    opts: { base: 'src' },
+    description: [ updateDepStream ]
   }),
   new Rule({
     files: htmlFiles,
-    description: [
-      genDepInjectStream,
-      gulp.dest.bind(gulp, 'build')
-    ]
+    opts: { base: 'src' },
+    description: [ genDepInjectStream ]
   }),
   new Rule({
     files: imgFiles,
-    description: [
-      gulp.dest.bind(gulp, 'build')
-    ]
+    opts: { base: 'src' },
+    description: []
+  })
+];
 
+var distRules = [
+  new Rule({
+    files: sassFiles,
+    opts: { dest: 'css' },
+    description: [
+      sass.bind(null, { includePaths: require('node-bourbon').includePaths }),
+      minifyCss
+    ]
+  }),
+  new Rule({
+    files: angularFiles,
+    opts: { base: 'src' },
+    description: [ minifyJs ]
+  }),
+  new Rule({
+    files: htmlFiles,
+    opts: { base: 'src' },
+    description: [
+      inject.bind(null,
+        gulp.src(angularFiles).pipe(angularFileSort()),
+        { relative: true }
+      ),
+      minifyHtml
+    ]
+  }),
+  new Rule({
+    files: ['src/bower_components/**/*'].concat(imgFiles),
+    opts: { base: 'src' },
+    description: []
   })
 ];
 
@@ -131,11 +165,26 @@ function Rule(opts) {
   for(var k in opts)
     this[k] = opts[k];
 
+  this.opts = this.opts || {};
   this.createPipeline = function() {
+    if(!this.description || !this.description.length) {
+      return through.obj(function(file, enc, cb) {
+        this.push(file)
+        cb();
+      });
+    }
     var pipeline = this.description.map(function(f) { return f(); });
     pipeline.reduce(function(a,b) { return a.pipe(b) });
     return pipeline[0];
   }
+};
+
+function buildRuleSet(rules, dest) {
+  rules.forEach(function(rule) {
+    gulp.src(rule.files, rule.opts)
+        .pipe(rule.createPipeline())
+        .pipe(gulp.dest(rule.opts.dest ? dest + '/' + rule.opts.dest : dest));
+  });
 };
 
 function setupAliases(aliases) {
@@ -143,29 +192,33 @@ function setupAliases(aliases) {
     for(var i=0;i<aliases[k].length;i++)
       gulp.task(aliases[k][i], [k]);
 };
-
 // =================================================================================
 // Tasks
 // =================================================================================
 
 gulp.task('build', function () {
-  rules.forEach(function(rule) {
-    gulp.src(rule.files, { base: 'src' })
-      .pipe(rule.createPipeline());
-  });
+  del.sync('build');
+  buildRuleSet(bldRules, 'build');
+});
+
+gulp.task('dist', function () {
+  del.sync('dist');
+  buildRuleSet(distRules, 'dist');
 });
 
 gulp.task('watch', function (done) {
-  rules.forEach(function(rule) {
-    watch(rule.files, { base: 'src' })
+  bldRules.forEach(function(rule) {
+    watch(rule.files, rule.opts)
       .pipe(rule.createPipeline())
+      .pipe(gulp.dest(rule.opts.dest || 'build'))
       .pipe(connect.reload());
   });
   done();
 });
 
 gulp.task('prepare_bower', function (done) {
-  bower().on('end', function () {
+  try { fs.mkdirSync('build'); } catch(e) {}
+  return bower().on('end', function () {
     fs.symlinkSync(__dirname + '/src/bower_components', 'build/bower_components');
     done();
   });
@@ -174,7 +227,7 @@ gulp.task('prepare_bower', function (done) {
 gulp.task('server', function () {
   del.sync('build');
   fs.mkdirSync('build');
-  runSequence('prepare_bower', 'build', 'watch');
+  runSequence('build', 'watch');
   connect.server({
     root: 'build',
     livereload: true
@@ -201,11 +254,10 @@ var karamConfig = {
 gulp.task('karma', function() {
   rg.karmaWatch(karamConfig)();
 });
-gulp.task('test',function(){
-  rg.karma(karamConfig)();
-});
 
 gulp.task('dev', [ 'server', 'karma' ]);
+
+gulp.task('test',rg.karma(karamConfig));
 
 gulp.task('jshint', rg.jshint({
   files: appFiles
@@ -220,6 +272,7 @@ gulp.task('beautify', rg.beautify({
 gulp.task('lint', function () {
   return runSequence('jshint', 'beautify');
 });
+
 
 gulp.task('default', function () {
   console.log('***********************'.yellow);
