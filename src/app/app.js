@@ -37,12 +37,13 @@ angular.module('koastAdminApp', [
         $state.go('login', { redirect: $state.current });
       }
     });
+    user.refreshToken();//see if the admin koast token we may still have is still valid
   });
 
 angular.module('koastAdminApp.service', ['koast'])
   .value('ADMIN_DISCOVERY_PATH', 'TODO')
   .value('KOAST_ROOT', 'http://TODO/api/')
-  .run(function (koastAdmin) {
+  .run(function (koastAdmin,user) {
     //load the supported koast admin functionality and urls as soon as the app is loaded
     koastAdmin.load();
   });

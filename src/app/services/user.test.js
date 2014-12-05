@@ -4,11 +4,26 @@ describe('koast admin user service:', function() {
   beforeEach(module('koastAdminApp.service'));
 
   beforeEach(module(function ($provide) {
-    $provide.service("$q", function() {return Q;});
+    $provide.service('$q', function() {return Q;});
+    $provide.service('_koastHttp', function() {
+      return {
+        saveToken : function(val){
+          if(val.token){
+            _token = val.token;
+          }else{
+            _token = val;
+          }
+        },
+        deleteToken : function(){
+          _token = null;
+        }
+      };
+    });
   }));
 
-  var user;
+  var user, _koastHttp, _token;
   beforeEach(function(){
+    _token = null;
     inject(function($injector){
       user = $injector.get('user');
     });
@@ -27,6 +42,7 @@ describe('koast admin user service:', function() {
     return user.login('user','pass')
     .then(function(){
       expect(user.isAuthenticated()).to.be.true;
+      expect(_token).to.not.be.null;
     });
   });
 
@@ -35,11 +51,16 @@ describe('koast admin user service:', function() {
     .then(user.logout)
     .then(function(){
       expect(user.isAuthenticated()).to.be.false;
+      expect(_token).to.be.null;
     });
   });
 
   it('should try to refresh the token',function(){
-    return user.refreshToken();
+    return user.refreshToken()
+    .then(function(){
+      expect(user.isAuthenticated()).to.be.true;
+      expect(_token).to.not.be.null;
+    });
   });
 
 });
