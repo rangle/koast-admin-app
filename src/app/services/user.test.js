@@ -56,7 +56,9 @@ describe('koast admin user service:', function() {
   });
 
   it('should try to refresh the token',function(){
-    return user.refreshToken()
+    return
+    user.login('user','pass')
+    .then(user.refreshToken)
     .then(function(){
       expect(user.isAuthenticated()).to.be.true;
       expect(_token).to.not.be.null;
