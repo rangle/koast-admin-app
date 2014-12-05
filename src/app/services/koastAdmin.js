@@ -138,11 +138,23 @@ angular.module('koastAdminApp.service')
           backUpStatuses[id] = 0;
           deferred.resolve({id:id});
         break;
+        case 'REFRESH':
+          if(config && config.headers && config.headers.Authorization){
+            deferred.resolve({
+              token : 'TEST_TOKEN',
+              expires : 1 //minutes
+            });
+          }else{
+            deferred.reject('Not Authorized');
+          }
+        break;
         case 'test2':
         case 'LOGIN':
         case 'LOGOUT':
-        case 'REFRESH':
-          deferred.resolve({});
+          deferred.resolve({
+            token : 'TEST_TOKEN',
+            expires : 2 //minutes
+          });
         break;
         default:
           throw new Error('koastAdmin_HTTP_MOCK.post: Unexpect URL '+url);
@@ -162,7 +174,19 @@ angular.module('koastAdminApp.service')
         break;
       }
       return deferred.promise;
+    },
+
+    setToken : function(val){
+      _token = val;
+    },
+    clearToken : function(){
+      _token = null;
+    },
+    getToken : function(){
+      return _token;
     }
   };
+  var _token = null;
+
   return service;
 }]);

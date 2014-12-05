@@ -8,35 +8,60 @@
  */
 
 angular.module('koastAdminApp.service')
-.service('user', ['koastAdmin',function(koastAdmin){
-
+.service('user', ['koastAdmin','_koastHttp','$timeout','_koastLogger',function(koastAdmin,_koastHttp,$timeout,_koastLogger){
+  //common makeApiCall function call wrapper
   var makeBackupApiCall = function(method,bodyOrConfig,config){
     return koastAdmin.makeApiCall('authentication',method,bodyOrConfig,config);
   };
-  var isAuthenticated = false;
+  //handle a successful authentication request
+  var handleSuccessAuth = function(result) {
+    log.debug('Successfully Authenticated.');
+    _koastHttp.saveToken(result.token);
+    _isAuthenticated = true;
+    _rerefreshTokenTimeout = $timeout(service.refreshToken,result.expires * 60000);
+  };
+  //handle a successful logout request
+  var handleDestroyAuth = function() {
+    _isAuthenticated = false;
+    _koastHttp.deleteToken();
+  };
+  //cancel the timeout for refreshing the token, if it exists
+  var cancelRefresh = function (){
+    if(_rerefreshTokenTimeout){
+      $timeout.cancel(_rerefreshTokenTimeout);
+    }
+  };
+
+  //try to refresh the token before it expires
+  var _rerefreshTokenTimeout;
+  var _isAuthenticated = false;
+  var log = _koastLogger.makeLogger('koastAdminApp.service.user');
 
   var service = {
+    //is the user currently authenticated against the koast admin API?
     isAuthenticated : function(){
-      return isAuthenticated;
+      return _isAuthenticated;
     },
     login : function(userName,password){
+      //clear any pre-existing refresh token timeouts
+      cancelRefresh();
       return makeBackupApiCall('login',{userName:userName,password:password})
-      .then(function(result){
-        //TODO: need to keep auth token and expiry
-        isAuthenticated = true;
-      });
+      .then(handleSuccessAuth);
     },
     logout:function(){
+      cancelRefresh();
       return makeBackupApiCall('logout')
-      .then(function(){
-        isAuthenticated = false;
-      });
+      .then(handleDestroyAuth);
     },
     refreshToken:function(){
-      return makeBackupApiCall('refreshToken');
+      log.debug('Refreshing koast admin auth token');
+      return makeBackupApiCall('refreshToken')
+      .then(handleSuccessAuth,
+        function(){
+          log.debug('Koast admin auth token is no longer valid. Logging out.');
+          handleDestroyAuth();
+        });
     }
-    //TODO: will need to auto refresh token
-    //TODO: will need to check if user's token is still valid after page load
   };
   return service;
 }]);
