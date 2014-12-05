@@ -63,7 +63,7 @@ var bldRules = [
     description: [ genDepInjectStream ]
   }),
   new Rule({
-    files: imgFiles,
+    files: ['src/bower_components/**/*'].concat(imgFiles),
     opts: { base: 'src' },
     description: []
   })
@@ -196,7 +196,7 @@ function setupAliases(aliases) {
 // Tasks
 // =================================================================================
 
-gulp.task('build', function () {
+gulp.task('build', [ 'prepare_bower' ], function () {
   del.sync('build');
   buildRuleSet(bldRules, 'build');
 });
@@ -216,12 +216,8 @@ gulp.task('watch', function (done) {
   done();
 });
 
-gulp.task('prepare_bower', function (done) {
-  try { fs.mkdirSync('build'); } catch(e) {}
-  return bower().on('end', function () {
-    fs.symlinkSync(__dirname + '/src/bower_components', 'build/bower_components');
-    done();
-  });
+gulp.task('prepare_bower', function () {
+  return bower();
 });
 
 gulp.task('server', function () {
