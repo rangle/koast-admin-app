@@ -8,6 +8,7 @@ var runSequence = require('run-sequence');
 var angularFileSort = require('gulp-angular-filesort');
 var watch = require('gulp-watch');
 var bower = require('gulp-bower');
+var plumber = require('gulp-plumber');
 var sass = require('gulp-sass');
 var del = require('del');
 var through = require('through2');
@@ -17,7 +18,7 @@ var minifyHtml = require('gulp-minify-css');
 var minifyJs = require('gulp-uglify');
 
 var styleGuide = ['src/style-guide/**/*'];
-var sassFiles = ['src/scss/*.scss'];
+var sassFiles = ['src/scss/**/*.scss'];
 var imgFiles = ['src/img/*'];
 var htmlFiles = ['src/app/**/*html', 'src/index.html'];
 var angularFiles = [
@@ -27,6 +28,103 @@ var angularFiles = [
   'src/app/**/*-controller.js',
   '!src/app/**/*.test.js'
 ];
+// =================================================================================
+// Custom Streams
+// =================================================================================
+
+var depChange = new EventEmitter();
+
+// Streams with side effects
+
+function passiveStreamGenerator(func) {
+  return function() {
+    return through.obj(function(file, enc, cb) {
+      this.push(file);
+      cb();
+      if(func)
+        func();
+    });
+  };
+}
+
+// Passive stream which updates angular depedencies
+
+var updateDepStream =  passiveStreamGenerator(function() {
+    depChange.emit('changed');
+    var injector = inject (
+      gulp.src(angularFiles).pipe(plumber()).pipe(angularFileSort()),
+      { relative: true }
+    );
+    gulp.src(htmlFiles, { base: 'src' } )
+      .pipe(injector)
+      .pipe(gulp.dest('build'));
+});
+
+//Generate a dynamic dependency injector which listens for changes
+
+function genDepInjectStream () {
+  var injector = inject (
+    gulp.src(angularFiles).pipe(plumber()).pipe(angularFileSort()),
+    { relative: true }
+  );
+  depChange.on('changed', function() {
+    injector.end();
+    injector = inject (
+      gulp.src(angularFiles).pipe(plumber()).pipe(angularFileSort()),
+
+      { relative: true }
+    );
+  });
+
+  return through.obj(function(file, enc, cb) {
+    var stream = this;
+    injector.write(file);
+    injector.once('data', function flush(file) {
+      stream.push(file);
+      cb();
+    });
+  });
+}
+
+
+// =================================================================================
+// Util
+// =================================================================================
+
+//Convenience class for declaratively crafting pipelines
+
+function Rule(opts) {
+  for(var k in opts)
+    this[k] = opts[k];
+
+  this.opts = this.opts || {};
+  this.createPipeline = function() {
+    if(!this.description || !this.description.length) {
+      return passiveStreamGenerator()();
+    }
+    var pipeline = this.description.map(function(f) { return f(); });
+    pipeline.reduce(function(a,b) { return a.pipe(b); });
+    return pipeline[0];
+  };
+}
+
+function buildRuleSet(rules, dest) {
+  rules.forEach(function(rule) {
+    gulp.src(rule.files, rule.opts)
+        .pipe(rule.createPipeline())
+        .pipe(gulp.dest(rule.opts.dest ? dest + '/' + rule.opts.dest : dest));
+  });
+}
+
+function setupAliases(aliases) {
+  for(var k in aliases)
+    for(var i=0;i<aliases[k].length;i++)
+      gulp.task(aliases[k][i], [k]);
+}
+
+// =================================================================================
+// Rule Sets
+// =================================================================================
 
 // Rules associate file sets (globs) with specific pipelines, the watch and
 // build tasks then utilize these rules to perform the appropriate operations
@@ -44,18 +142,20 @@ var bldRules = [
   }),
   new Rule({
     files: sassFiles,
-    opts: { dest: 'css' },
+    opts: { dest: 'css', recompileAll: true },
     description: [
       sass.bind(null, {
         errLogToConsole:true,
-        includePaths: require('node-bourbon').includePaths,
+        includePaths: require('node-bourbon').includePaths
       })
     ]
   }),
   new Rule({
     files: angularFiles,
     opts: { base: 'src' },
-    description: [ updateDepStream ]
+    description: [
+      updateDepStream
+    ]
   }),
   new Rule({
     files: htmlFiles,
@@ -63,7 +163,7 @@ var bldRules = [
     description: [ genDepInjectStream ]
   }),
   new Rule({
-    files: imgFiles,
+    files: ['src/bower_components/**/*'].concat(imgFiles),
     opts: { base: 'src' },
     description: []
   })
@@ -88,7 +188,7 @@ var distRules = [
     opts: { base: 'src' },
     description: [
       inject.bind(null,
-        gulp.src(angularFiles).pipe(angularFileSort()),
+        gulp.src(angularFiles).pipe(plumber()).pipe(angularFileSort()),
         { relative: true }
       ),
       minifyHtml
@@ -102,101 +202,10 @@ var distRules = [
 ];
 
 // =================================================================================
-// Custom Streams
-// =================================================================================
-
-var depChange = new EventEmitter();
-
-//Passive stream which updates angular depedencies
-
-function updateDepStream () {
-  return through.obj(function(file, enc, cb) {
-    depChange.emit('changed');
-    var injector = inject (
-      gulp.src(angularFiles).pipe(angularFileSort()),
-      { relative: true }
-    );
-    gulp.src(htmlFiles, { base: 'src' } )
-      .pipe(through.obj(function(file, enc, cb) {
-        this.push(file);
-        cb();
-      }
-      ))
-      .pipe(injector)
-      .pipe(gulp.dest('build'));
-    this.push(file);
-    cb();
-  });
-};
-
-//Generate a dynamic dependency injector which listens for changes
-
-function genDepInjectStream () {
-  var injector = inject (
-    gulp.src(angularFiles).pipe(angularFileSort()),
-    { relative: true }
-  );
-  depChange.on('changed', function() {
-    injector.end();
-    injector = inject (
-      gulp.src(angularFiles).pipe(angularFileSort()),
-      { relative: true }
-    );
-  });
-
-  return through.obj(function(file, enc, cb) {
-    var stream = this;
-    injector.write(file);
-    injector.once('data', function flush(file) {
-      stream.push(file);
-      cb();
-    });
-  });
-};
-
-
-// =================================================================================
-// Util
-// =================================================================================
-
-//Convenience class for declaratively crafting pipelines
-
-function Rule(opts) {
-  for(var k in opts)
-    this[k] = opts[k];
-
-  this.opts = this.opts || {};
-  this.createPipeline = function() {
-    if(!this.description || !this.description.length) {
-      return through.obj(function(file, enc, cb) {
-        this.push(file)
-        cb();
-      });
-    }
-    var pipeline = this.description.map(function(f) { return f(); });
-    pipeline.reduce(function(a,b) { return a.pipe(b) });
-    return pipeline[0];
-  }
-};
-
-function buildRuleSet(rules, dest) {
-  rules.forEach(function(rule) {
-    gulp.src(rule.files, rule.opts)
-        .pipe(rule.createPipeline())
-        .pipe(gulp.dest(rule.opts.dest ? dest + '/' + rule.opts.dest : dest));
-  });
-};
-
-function setupAliases(aliases) {
-  for(var k in aliases)
-    for(var i=0;i<aliases[k].length;i++)
-      gulp.task(aliases[k][i], [k]);
-};
-// =================================================================================
 // Tasks
 // =================================================================================
 
-gulp.task('build', function () {
+gulp.task('build', [ 'prepare_bower' ], function () {
   del.sync('build');
   buildRuleSet(bldRules, 'build');
 });
@@ -209,19 +218,25 @@ gulp.task('dist', function () {
 gulp.task('watch', function (done) {
   bldRules.forEach(function(rule) {
     watch(rule.files, rule.opts)
+      .pipe(through.obj(function(file, enc, cb) {
+        if(rule.opts.recompileAll) {
+          var mstream = this;
+          var fstream = gulp.src(rule.files, rule.opts);
+          fstream.on('data', function(f) { mstream.push(f); });
+          fstream.on('end', function() { cb(); });
+        } else {
+            this.push(file);
+            cb();
+        }
+      }))
       .pipe(rule.createPipeline())
-      .pipe(gulp.dest(rule.opts.dest || 'build'))
+      .pipe(gulp.dest(rule.opts.dest ? 'build/' + rule.opts.dest : 'build'))
       .pipe(connect.reload());
   });
-  done();
 });
 
-gulp.task('prepare_bower', function (done) {
-  try { fs.mkdirSync('build'); } catch(e) {}
-  return bower().on('end', function () {
-    fs.symlinkSync(__dirname + '/src/bower_components', 'build/bower_components');
-    done();
-  });
+gulp.task('prepare_bower', function () {
+  return bower();
 });
 
 gulp.task('server', function () {
