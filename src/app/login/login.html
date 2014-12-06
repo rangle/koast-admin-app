@@ -1,19 +1,19 @@
-<div id='loginView'>
-  <h1>Login</h1>
+<div class="page-title">
+  <h1 class="">Login</h1>
+</div>
 
-  <form id='loginForm'>
-    <div class='form-group'>
-      <label for='username'>Username</label>
-      <input class='form-control' ng-model='username' type="text" name="username" value="">
-    <div>
 
-    <div class='form-group'>
-      <label for='password'>Password</label>
-      <input class='form-control' ng-model='password' type="password" name="password" value="">
-    <div>
-
-    <div  class='form-group'>
-      <button id='submitButton' type='submit' class='btn btn-default' ng-click='login(username, password)'>Submit</button>
+<form class="text-center">
+  <fieldset>
+    <div class="input-wrapper">
+      <label>Username</label>
+      <input type="text" ng-model="username"/>
     </div>
-  </form>
-<div>
+    <div class="input-wrapper">
+      <label>Password</label>
+      <input type="password" ng-model="password"/>
+    </div>
+  </fieldset>
+
+  <button class="btn btn--success" ng-click="login(username, password)"> Login </button>
+</form>

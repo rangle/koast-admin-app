@@ -24,7 +24,7 @@ label {
 /* --------------------------------
   Text Input
 -------------------------------- */
-input[type=text], select {
+input[type=text][type=password], select {
   border: 1px solid $color-4;
   border-radius: .25em;
   background: $color-5;
@@ -34,7 +34,7 @@ input[type=text], select {
   }
 }
 
-input[type=text] {
+input[type=text][type=password] {
   padding: .6em 1em;
   box-shadow: inset 1px 1px rgba(#000, .03);
 
