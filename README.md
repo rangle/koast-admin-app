@@ -1,7 +1,7 @@
 koast-admin-app [![Build Status](https://magnum-ci.com/status/e09e4cc94e3688586a0b9d3ea8250095.png)](https://magnum-ci.com/public/b2d4eb005be95a6a52f6/builds) 
 ===============
 
-client app to admin a [koast server](https://github.com/rangle/koast)
+A Client app to admin a [koast server](https://github.com/rangle/koast), allowing users to manage database backups, server logs(TODO), and server configuations (TODO).
 
 Getting Started
 --------
