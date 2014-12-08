@@ -1,7 +1,7 @@
 'use strict';
 
 describe('koast admin service:', function() {
-  beforeEach(module('koastAdminApp.service'));
+  beforeEach(module('koastAdminApp.core.koastAdmin.koastAdmin-service'));
   beforeEach(module(function ($provide) {
     $provide.service('$q', function() {return Q;});
 

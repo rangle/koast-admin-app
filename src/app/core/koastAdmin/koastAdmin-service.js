@@ -3,9 +3,9 @@
 //
 
 /**
- * @module koastAdminApp.service/koastAdmin
+ * @module koastAdminApp.core.koastAdmin.koastAdmin-service/koastAdmin-service
  */
-angular.module('koastAdminApp.service')
+angular.module('koastAdminApp.core.koastAdmin.koastAdmin-service', [ 'koastAdminApp.core.constants' ])
 .service('koastAdmin', ['koastAdmin_HTTP_MOCK','KOAST_ROOT','ADMIN_DISCOVERY_PATH','$q',
   function(_koastHttp,KOAST_ROOT,ADMIN_DISCOVERY_PATH,$q){
   var supportedFunctionalityByType;

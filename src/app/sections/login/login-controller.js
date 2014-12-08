@@ -1,5 +1,7 @@
 'use strict';
-angular.module('koastAdminApp')
+angular.module('koastAdminApp.sections.login.login-controller', [
+    'koastAdminApp.core.user'
+])
 .controller('loginCtrl',['$scope','user','$location',function($scope,user,$location){
   $scope.login = function(username,password) {
     $scope.loggingIn = true;

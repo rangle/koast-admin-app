@@ -1,0 +1,1 @@
+angular.module('koastAdminApp.sections.login.login-controller', []);

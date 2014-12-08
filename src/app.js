@@ -1,17 +1,18 @@
 'use strict';
 
 angular.module('koastAdminApp.directives', []);
+angular.module('koastAdminApp.service', []);
 
 angular.module('koastAdminApp', [
     'ui.router',
     'ngAnimate',
     'koast',
+    'koastAdminApp.service',
     'koastAdminApp.sections',
     'koastAdminApp.core',
     'koastAdminApp.components'
   ])
-  .controller('mainCtrl', function() {
-  })
+  .controller('mainCtrl', function () {})
   .config(['$stateProvider', '$urlRouterProvider',
     function ($stateProvider, $urlRouterProvider) {
       $stateProvider
@@ -23,7 +24,7 @@ angular.module('koastAdminApp', [
           url: '/login',
           templateUrl: 'app/sections/login/login.html',
           controller: 'loginCtrl'
-         })
+        })
         .state('backup', {
           url: '/backup',
           templateUrl: 'app/sections/backup/backup.html',
@@ -33,13 +34,15 @@ angular.module('koastAdminApp', [
       $urlRouterProvider.otherwise('/');
     }
   ])
-  .run(function($state, $rootScope, user, koastAdmin) {
+  .run(function ($state, $rootScope, user, koastAdmin) {
     koastAdmin.load();
 
-    $rootScope.$on('$stateChangeSuccess', function() {
-      if(!user.isAuthenticated() && $state.current.name !== 'login') {
-        $state.go('login', { redirect: $state.current });
+    $rootScope.$on('$stateChangeSuccess', function () {
+      if (!user.isAuthenticated() && $state.current.name !== 'login') {
+        $state.go('login', {
+          redirect: $state.current
+        });
       }
     });
-    user.refreshToken();//see if the admin koast token we may still have is still valid
+    user.refreshToken(); //see if the admin koast token we may still have is still valid
   });

@@ -1,7 +1,7 @@
 'use strict';
 
 describe('koast backup service:', function() {
-  beforeEach(module('koastAdminApp.service'));
+  beforeEach(module('koastAdminApp.sections'));
 
   beforeEach(module(function ($provide) {
     $provide.service("$q", function() {return Q;});

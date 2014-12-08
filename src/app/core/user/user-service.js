@@ -7,7 +7,7 @@
  * @module koastAdminApp.service/user
  */
 
-angular.module('koastAdminApp.service')
+angular.module('koastAdminApp.core.user.user-service', [ 'koastAdminApp.core.koastAdmin', 'koast' ])
 .service('user', ['koastAdmin','_koastHttp','$timeout','_koastLogger',function(koastAdmin,_koastHttp,$timeout,_koastLogger){
   //common makeApiCall function call wrapper
   var makeBackupApiCall = function(method,bodyOrConfig,config){
