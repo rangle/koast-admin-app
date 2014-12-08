@@ -8,4 +8,4 @@ Getting Started
 1. Download and install Node.js from [here](http://nodejs.org/download/)
 2. In the terminal, ```npm install; bower install```
 3. Then ```gulp dev```
-4. Finally open [localhost:3000](http://localhost:3000) in your browser
+4. Finally open [localhost:8080](http://localhost:8080) in your browser
