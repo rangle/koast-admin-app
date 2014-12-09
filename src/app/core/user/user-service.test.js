@@ -1,38 +1,41 @@
 'use strict';
 
-describe('koast admin user service:', function() {
+describe('koast admin user service:', function () {
+  var user, _koastHttp, _token;
   beforeEach(module('koastAdminApp.core.user.user-service'));
-
   beforeEach(module(function ($provide) {
-    inject(function($injector) {
-        $injector.get('koastAdmin').load();
+
+    $provide.service('$q', function () {
+      return Q;
     });
-    $provide.service('$q', function() {return Q;});
-    $provide.service('_koastHttp', function() {
+    $provide.service('_koastHttp', function () {
       return {
-        saveToken : function(val){
-          if(val.token){
+        saveToken: function (val) {
+          if (val.token) {
             _token = val.token;
-          }else{
+          } else {
             _token = val;
           }
         },
-        deleteToken : function(){
+        deleteToken: function () {
           _token = null;
         }
       };
     });
   }));
 
-  var user, _koastHttp, _token;
-  beforeEach(function(){
+
+  beforeEach(function () {
     _token = null;
-    inject(function($injector){
+    inject(function ($injector) {
       user = $injector.get('user');
+
+      //  $injector.get('koastAdmin').load();
     });
+
   });
 
-  it('should exist',function(){
+  it('should exist', function () {
     expect(user).to.be.an('object');
     expect(user.login).to.be.a('function');
     expect(user.logout).to.be.a('function');
@@ -41,31 +44,31 @@ describe('koast admin user service:', function() {
     expect(user.isAuthenticated()).to.be.false
   });
 
-  it('should login',function(){
-    return user.login('user','pass')
-    .then(function(){
-      expect(user.isAuthenticated()).to.be.true;
-      expect(_token).to.not.be.null;
-    });
+  it('should login', function () {
+    return user.login('user', 'pass')
+      .then(function () {
+        expect(user.isAuthenticated()).to.be.true;
+        expect(_token).to.not.be.null;
+      });
   });
 
-  it('should logout',function(){
-    return user.login('user','pass')
-    .then(user.logout)
-    .then(function(){
-      expect(user.isAuthenticated()).to.be.false;
-      expect(_token).to.be.null;
-    });
+  it('should logout', function () {
+    return user.login('user', 'pass')
+      .then(user.logout)
+      .then(function () {
+        expect(user.isAuthenticated()).to.be.false;
+        expect(_token).to.be.null;
+      });
   });
 
-  it('should try to refresh the token',function(){
+  it('should try to refresh the token', function () {
     return
-    user.login('user','pass')
-    .then(user.refreshToken)
-    .then(function(){
-      expect(user.isAuthenticated()).to.be.true;
-      expect(_token).to.not.be.null;
-    });
+    user.login('user', 'pass')
+      .then(user.refreshToken)
+      .then(function () {
+        expect(user.isAuthenticated()).to.be.true;
+        expect(_token).to.not.be.null;
+      });
   });
 
 });
