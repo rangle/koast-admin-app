@@ -1,4 +1,5 @@
 var fs = require('fs');
+var q = require('q');
 var EventEmitter = require('events').EventEmitter;
 var gulp = require('gulp');
 var rg = require('rangle-gulp');
@@ -23,9 +24,9 @@ var imgFiles = ['src/img/*'];
 var htmlFiles = ['src/app/**/*html', 'src/index.html'];
 var angularFiles = [
   'src/app/app.js',
-  'src/app/services/*.js',
-  'src/app/**/*-directive.js',
-  'src/app/**/*-controller.js',
+  'src/app/components/**/*js',
+  'src/app/core/**/*js',
+  'src/app/sections/**/*js',
   '!src/app/**/*.test.js'
 ];
 // =================================================================================
@@ -86,7 +87,6 @@ function genDepInjectStream () {
   });
 }
 
-
 // =================================================================================
 // Util
 // =================================================================================
@@ -120,6 +120,23 @@ function setupAliases(aliases) {
   for(var k in aliases)
     for(var i=0;i<aliases[k].length;i++)
       gulp.task(aliases[k][i], [k]);
+}
+
+// Returns a promise which resolves to an array containing all files output by
+// the given stream
+
+
+function collect(stream) {
+  var p = q.defer();
+  var result = [];
+  stream
+    .on('data', function(file) {
+      result.push(file);
+    })
+    .on('end', function() {
+      p.resolve(result);
+    });
+  return p.promise;
 }
 
 // =================================================================================
@@ -253,7 +270,7 @@ var appFiles = ['src/app/app.js', 'src/app/**/*.js', '!./src/app/**/*.test.js'];
 var testFiles = ['src/app/app.js','./src/app/**/*.js'];
 var karmaFile = './testing/karma.conf.js';
 
-var karamConfig = {
+var karmaConfig = {
   karmaConf: karmaFile,
   files: testFiles,
   vendor: [
@@ -267,12 +284,19 @@ var karamConfig = {
 };
 
 gulp.task('karma', function() {
-  rg.karmaWatch(karamConfig)();
+  collect(gulp.src(karmaConfig.files)
+    .pipe(angularFileSort()))
+    .then(function(files) {
+       karmaConfig.files = files.map(function(file) {
+          return file.path;
+        });
+       rg.karmaWatch(karmaConfig)();
+  });
 });
 
 gulp.task('dev', [ 'server', 'karma' ]);
 
-gulp.task('test',rg.karma(karamConfig));
+gulp.task('test',rg.karma(karmaConfig));
 
 gulp.task('jshint', rg.jshint({
   files: appFiles

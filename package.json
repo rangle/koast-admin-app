@@ -42,6 +42,7 @@
     "jsdoc": "^3.3.0-alpha10",
     "ncp": "^1.0.1",
     "node-bourbon": "1.2.3",
+    "q": "^1.1.2",
     "rangle-gulp": "0.0.7",
     "run-sequence": "^1.0.2",
     "through2": "^0.6.3"

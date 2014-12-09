@@ -1,8 +1,8 @@
-angular.module('koastAdminApp.directives')
+angular.module('koastAdminApp.components.navbar.navbar-directive', [])
   .directive('navbar', [function () {
     return {
       restrict: 'E',
-      templateUrl: 'app/navbar/navbar.html',
+      templateUrl: 'app/components/navbar/navbar.html',
       link: function (scope, iElement, iAttrs) {
 
         scope.links = scope.$eval(iAttrs.links);

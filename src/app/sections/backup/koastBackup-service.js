@@ -6,7 +6,7 @@
 /**
  * @module koastAdminApp.service/koastBackup
  */
-angular.module('koastAdminApp.service')
+angular.module('koastAdminApp.sections.backup.koastBackup-service', ['koastAdminApp.core.koastAdmin'])
 .service('koastBackup',['koastAdmin',function(koastAdmin){
 
   //common koastAdmin.makeApiCall function abstraction

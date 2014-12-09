@@ -1,16 +1,18 @@
 'use strict';
 
 describe('koast backup service:', function() {
-  beforeEach(module('koastAdminApp.service'));
+  beforeEach(module('koastAdminApp.sections'));
 
   beforeEach(module(function ($provide) {
     $provide.service("$q", function() {return Q;});
   }));
 
-  var koastBackup;
+  var koastBackup, koastAdmin;
   beforeEach(function(){
     inject(function($injector){
       koastBackup = $injector.get('koastBackup');
+      koastAdmin = $injector.get('koastAdmin');
+      koastAdmin.load();
     });
   });
 

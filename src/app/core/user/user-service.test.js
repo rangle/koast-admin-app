@@ -1,9 +1,12 @@
 'use strict';
 
 describe('koast admin user service:', function() {
-  beforeEach(module('koastAdminApp.service'));
+  beforeEach(module('koastAdminApp.core.user.user-service'));
 
   beforeEach(module(function ($provide) {
+    inject(function($injector) {
+        $injector.get('koastAdmin').load();
+    });
     $provide.service('$q', function() {return Q;});
     $provide.service('_koastHttp', function() {
       return {

@@ -3,7 +3,6 @@
 describe('koast admin app:', function() {
   beforeEach(module('koastAdminApp'));
 
-  it('should exist', function() {
-  });
+  it('should exist', function() {});
 
 });
