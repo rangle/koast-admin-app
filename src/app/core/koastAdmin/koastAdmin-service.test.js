@@ -11,6 +11,7 @@ describe('koast admin service:', function() {
   beforeEach(function(){
     inject(function($injector){
       koastAdmin = $injector.get('koastAdmin');
+      koastAdmin.load();
     });
   });
 
