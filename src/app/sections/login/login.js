@@ -1,3 +1,1 @@
-angular.module('koastAdminApp.sections.login', [
-    'koastAdminApp.sections.login.login-controller'
-]);
+angular.module('koastAdminApp.sections.login', ['koastAdminApp.sections.login.login-controller']);
