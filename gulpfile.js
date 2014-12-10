@@ -7,6 +7,7 @@ var inject = require('gulp-inject');
 var colors = require('colors');
 var runSequence = require('run-sequence');
 var angularFileSort = require('gulp-angular-filesort');
+var beautify = require('gulp-beautify');
 var watch = require('gulp-watch');
 var bower = require('gulp-bower');
 var plumber = require('gulp-plumber');
@@ -266,7 +267,7 @@ gulp.task('server', function () {
   });
 });
 
-var appFiles = ['src/app/app.js', 'src/app/**/*.js', '!./src/app/**/*.test.js'];
+var appFiles = ['src/app/**/*js'];
 var testFiles = ['src/app/app.js','./src/app/**/*.js'];
 var karmaFile = './testing/karma.conf.js';
 
@@ -296,17 +297,18 @@ gulp.task('karma', function() {
 
 gulp.task('dev', [ 'server', 'karma' ]);
 
-gulp.task('test',rg.karma(karmaConfig));
+gulp.task('test', rg.karma(karmaConfig));
 
 gulp.task('jshint', rg.jshint({
   files: appFiles
 }));
 
-gulp.task('beautify', rg.beautify({
-  files: [appFiles[0]]
-}));
 
-//Run this before comitting
+gulp.task('beautify', function() {
+  return gulp.src(appFiles, { base: '.' })
+          .pipe(beautify('.jsbeautifyrc'))
+          .pipe(gulp.dest('.'));
+});
 
 gulp.task('lint', function () {
   return runSequence('jshint', 'beautify');
