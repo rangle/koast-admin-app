@@ -3,12 +3,12 @@
 </div>
 
 <!-- Backup notification -->
-<div ng-show="restoringBackup" class="alert--progress animate-scale--r-b">
-  <strong>Restoring {{restoringName}}</strong> &hellip; {{restoringPercent}}% complete
+<div ng-show="backupCtrl.restoringBackup" class="alert--progress animate-scale--r-b">
+  <strong>Restoring {{backupCtrl.restoringName}}</strong> &hellip; {{backupCtrl.restoringPercent}}% complete
 </div>
 
 <p class="add-bottom text-right">
-  <button ng-click="backupCtrl.toggleModal()"
+  <button ng-disabled="backupCtrl.restoringBackup" ng-click="backupCtrl.toggleModal()"
           class="btn btn--success">
             <i class="fa fa-plus"></i>
             Create New Backup
@@ -17,15 +17,15 @@
 
 <!-- List of backups -->
 <ul class="item-list">
-  <li ng-repeat="backup in backups">
+  <li ng-repeat="backup in backupCtrl.backups">
     {{backup.name}}
     <button class="btn btn--outline"
-            ng-click="restoreBackup(backup.id)"
-            ng-disabled="restoringBackup">restore</button>
+            ng-click="backupCtrl.restoreBackup(backup.id)"
+            ng-disabled="backupCtrl.restoringBackup">restore</button>
   </li>
 </ul>
 
-<div class="empty-state" ng-show="!backups || backups.length === 0">
+<div class="empty-state" ng-show="!backupCtrl.backups || backupCtrl.backups.length === 0">
   <div class="empty-state__tag">
     <!-- Icon -->
     <i class="fa fa-database fa-5x"></i>
@@ -77,8 +77,8 @@
         </div>
       </fieldset>
 
-      <div ng-show="creatingBackup" class="alert--progress animate-scale--l-c">
-        <strong>Backing up {{restoringName}}</strong> &hellip; {{percent}}% complete
+      <div ng-show="backupCtrl.creatingBackup" class="alert--progress animate-scale--l-c">
+        <strong>Backing up {{backupCtrl.restoringName}}</strong> &hellip; {{backupCtrl.percent}}% complete
       </div>
 
       <div ng-hide="creatingBackup" class="input-wrapper animate-scale--l-c">
@@ -87,8 +87,8 @@
                   Cancel
         </button>
         <button class="btn btn--success"
-                ng-click="createBackup(backupName, backupType)"
-                ng-disabled="creatingBackup">
+                ng-click="backupCtrl.createBackup(backupName, backupType)"
+                ng-disabled="backupCtrl.creatingBackup">
                   Create
         </button>
       </div>

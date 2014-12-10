@@ -9,7 +9,7 @@ angular.module('koastAdminApp', ['ui.router', 'ngAnimate', 'koast', 'koastAdminA
     }).state('login', {
         url: '/login',
         templateUrl: 'app/sections/login/login.html',
-        controller: 'loginCtrl'
+        controller: 'loginCtrl as loginCtrl'
     }).state('backup', {
         url: '/backup',
         templateUrl: 'app/sections/backup/backup.html',

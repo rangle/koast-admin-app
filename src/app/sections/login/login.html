@@ -7,13 +7,13 @@
   <fieldset>
     <div class="input-wrapper">
       <label>Username</label>
-      <input type="text" ng-model="username"/>
+      <input type="text" ng-model="loginCtrl.username"/>
     </div>
     <div class="input-wrapper">
       <label>Password</label>
-      <input type="password" ng-model="password"/>
+      <input type="password" ng-model="loginCtrl.password"/>
     </div>
   </fieldset>
 
-  <button class="btn btn--success" ng-click="login(username, password)"> Login </button>
+  <button class="btn btn--success" ng-click="loginCtrl.login(username, password)"> Login </button>
 </form>
