@@ -7,7 +7,6 @@ var inject = require('gulp-inject');
 var colors = require('colors');
 var runSequence = require('run-sequence');
 var angularFileSort = require('gulp-angular-filesort');
-var beautify = require('gulp-beautify');
 var watch = require('gulp-watch');
 var bower = require('gulp-bower');
 var plumber = require('gulp-plumber');
@@ -18,6 +17,7 @@ var connect = require('gulp-connect');
 var minifyCss = require('gulp-minify-html');
 var minifyHtml = require('gulp-minify-css');
 var minifyJs = require('gulp-uglify');
+var beautify = require('gulp-jsbeautifier');
 
 var styleGuide = ['src/style-guide/**/*'];
 var sassFiles = ['src/scss/**/*.scss'];
@@ -342,12 +342,11 @@ gulp.task('jshint', rg.jshint({
 }));
 
 
-gulp.task('beautify', function () {
-  return gulp.src(appFiles, {
-      base: '.'
-    })
-    .pipe(beautify('.jsbeautifyrc'))
-    .pipe(gulp.dest('.'));
+
+gulp.task('beautify', function() {
+  return gulp.src(appFiles, { base: '.' })
+          .pipe(beautify({ config: '.jsbeautifyrc' }))
+          .pipe(gulp.dest('.'));
 });
 
 gulp.task('lint', function () {
