@@ -3,17 +3,18 @@
 </div>
 
 
-<form class="text-center">
-  <fieldset>
-    <div class="input-wrapper">
-      <label>Username</label>
-      <input type="text" ng-model="loginCtrl.username"/>
-    </div>
-    <div class="input-wrapper">
-      <label>Password</label>
-      <input type="password" ng-model="loginCtrl.password"/>
-    </div>
-  </fieldset>
+<form>
+  <div class="input-wrapper">
+    <label>Username</label>
+    <input type="text" ng-model="loginCtrl.username"/>
+  </div>
 
-  <button class="btn btn--success" ng-click="loginCtrl.login(username, password)"> Login </button>
+  <div class="input-wrapper">
+    <label>Password</label>
+    <input type="password" ng-model="loginCtrl.password"/>
+  </div>
+
+  <div class="input-wrapper">
+    <button class="btn btn--success" ng-click="loginCtrl.login(username, password)"> Login </button>
+  </div>
 </form>
