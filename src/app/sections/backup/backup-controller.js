@@ -1,66 +1,60 @@
 'use strict';
-angular.module('koastAdminApp.sections.backup.backup-controller', ['koastAdminApp.sections.backup.backup-controller']).controller('backupCtrl', ['$scope', '$interval', 'koastBackup', function (
-$scope, $interval, koastBackup) {
-
-
+angular.module('koastAdminApp.sections.backup.backup-controller', [
+    'koastAdminApp.sections.backup.backup-controller'
+  ])
+  .controller('backupCtrl', function ($interval, koastBackup) {
     var vm = this;
 
-    koastBackup.getBackups().then(function (backups) {
-        $scope.backups = backups;
-    });
-
     vm.isModalVisible = false;
-
     vm.toggleModal = function () {
-        vm.isModalVisible = !vm.isModalVisible;
+      vm.isModalVisible = !vm.isModalVisible;
     };
 
-    koastBackup.getBackups().then(function (backups) {
-        $scope.backups = backups;
-    });
+    koastBackup.getBackups()
+      .then(function (backups) {
+        vm.backups = backups;
+      });
 
     var backingupInterval;
+    vm.createBackup = function (name, type) {
+      vm.percent = 0;
+      vm.creatingBackup = true;
 
-    $scope.createBackup = function (name, type) {
-        $scope.creatingBackup = true;
-        $scope.percent = 0;
-        koastBackup.createBackup(name, type).then(function (reciept) {
-            var id = reciept.id;
-            backingupInterval = $interval(function () {
-                koastBackup.getBackupStatus(id).then(function (status) {
-                    $scope.percent = status.completed;
-                });
-            }, 100);
+      koastBackup.createBackup(name, type)
+        .then(function (reciept) {
+          var id = reciept.id;
+          backingupInterval = $interval(function () {
+            koastBackup.getBackupStatus(id)
+              .then(function (status) {
+                vm.percent = status.completed;
+                if (vm.percent >= 100) {
+                  $interval.cancel(backingupInterval);
+                  vm.toggleModal();
+                  vm.creatingBackup = false;
+                }
+              });
+          }, 100);
         });
     };
-    $scope.$watch('percent', function (newVal) {
-        if (newVal >= 100) {
-            $interval.cancel(backingupInterval);
-            vm.toggleModal();
-            $scope.creatingBackup = false;
-        }
-    });
 
     var restoringInterval;
-    $scope.restoreBackup = function (id) {
-        $scope.restoringBackup = true;
-        $scope.restoringPercent = 0;
-        $scope.restoringName = id;
-        koastBackup.restoreBackup(id).then(function (reciept) {
-            var id = reciept.id;
-            restoringInterval = $interval(function () {
-                koastBackup.getBackupStatus(id).then(function (status) {
-                    $scope.restoringPercent = status.completed;
-                });
-            }, 100);
+    vm.restoreBackup = function (id) {
+      vm.restoringBackup = true;
+      vm.restoringPercent = 0;
+      vm.restoringName = id;
+      koastBackup.restoreBackup(id)
+        .then(function (reciept) {
+          var id = reciept.id;
+          restoringInterval = $interval(function () {
+            koastBackup.getBackupStatus(id)
+              .then(function (status) {
+                vm.restoringPercent = status.completed;
+                if (vm.restoringPercent >= 100) {
+                  $interval.cancel(restoringInterval);
+                  vm.restoringBackup = false;
+                }
+              });
+          }, 100);
         });
     };
-    $scope.$watch('restoringPercent', function (newVal) {
-        if (newVal >= 100) {
-            $interval.cancel(restoringInterval);
-            $scope.restoringBackup = false;
-        }
-    });
-
-
-}]);
+  });
