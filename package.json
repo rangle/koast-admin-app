@@ -24,6 +24,7 @@
     "rangle-gulp": "^0.1.1"
   },
   "devDependencies": {
+    "chai": "^1.10.0",
     "colors": "^1.0.3",
     "connect-livereload": "0.5.2",
     "del": "^1.0.0",
@@ -43,11 +44,16 @@
     "gulp-uglify": "^1.0.1",
     "gulp-watch": "3.0.0",
     "jsdoc": "^3.3.0-alpha10",
+    "karma-chai": "^0.1.0",
+    "karma-mocha": "^0.1.10",
+    "karma-sinon": "^1.0.4",
     "ncp": "^1.0.1",
     "node-bourbon": "1.2.3",
     "q": "^1.1.2",
     "run-sequence": "^1.0.2",
-    "through2": "^0.6.3"
+    "sinon": "^1.12.2",
+    "through2": "^0.6.3",
+    "vinyl-utils": "^1.0.5"
   },
   "peerDependencies": {
     "koast": ">=0.4.5"
