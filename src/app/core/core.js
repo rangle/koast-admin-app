@@ -1,1 +1,4 @@
-angular.module('koastAdminApp.core', ['koastAdminApp.core.koastAdmin', 'koastAdminApp.core.user']);
+angular.module('koastAdminApp.core', [
+    'koastAdminApp.core.api',
+    'koastAdminApp.core.user'
+]);

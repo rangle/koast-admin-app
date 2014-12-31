@@ -2,7 +2,7 @@
 angular.module('koastAdminApp.sections.backup.backup-controller', [
     'koastAdminApp.sections.backup.backup-controller'
   ])
-  .controller('backupCtrl', function ($interval, koastBackup) {
+  .controller('backupCtrl', function ($interval, backup, tagList) {
     var vm = this;
 
     vm.isModalVisible = false;
@@ -10,21 +10,31 @@ angular.module('koastAdminApp.sections.backup.backup-controller', [
       vm.isModalVisible = !vm.isModalVisible;
     };
 
-    koastBackup.getBackups()
+    vm.collections = function () {
+      return tagList.val('collections');
+    },
+
+    backup.list()
       .then(function (backups) {
+        console.log(backups);
         vm.backups = backups;
       });
 
     var backingupInterval;
-    vm.createBackup = function (name, type) {
+    vm.createBackup = function (name, collections, type) {
+      if(!(name && collections.length && type)) {
+        return;
+      }
+
       vm.percent = 0;
       vm.creatingBackup = true;
 
-      koastBackup.createBackup(name, type)
-        .then(function (reciept) {
-          var id = reciept.id;
+      backup.createBackup(name, collections, type)
+        .then(function (receipt) {
+          console.log(receipt);
+          var id = receipt.id;
           backingupInterval = $interval(function () {
-            koastBackup.getBackupStatus(id)
+            backup.status({ id: id })
               .then(function (status) {
                 vm.percent = status.completed;
                 if (vm.percent >= 100) {
@@ -34,7 +44,13 @@ angular.module('koastAdminApp.sections.backup.backup-controller', [
                 }
               });
           }, 100);
-        });
+        })
+      .then(null, function(e) {
+        //TODO indicate failure
+        console.error(e.stack);
+        vm.toggleModal();
+        vm.creatingBackup = false;
+      });
     };
 
     var restoringInterval;
@@ -42,11 +58,10 @@ angular.module('koastAdminApp.sections.backup.backup-controller', [
       vm.restoringBackup = true;
       vm.restoringPercent = 0;
       vm.restoringName = id;
-      koastBackup.restoreBackup(id)
-        .then(function (reciept) {
-          var id = reciept.id;
+      backup.restoreBackup(id)
+        .then(function (receipt) {
           restoringInterval = $interval(function () {
-            koastBackup.getBackupStatus(id)
+            backup.status({ id: id })
               .then(function (status) {
                 vm.restoringPercent = status.completed;
                 if (vm.restoringPercent >= 100) {
@@ -55,6 +70,11 @@ angular.module('koastAdminApp.sections.backup.backup-controller', [
                 }
               });
           }, 100);
-        });
+      })
+      .then(null, function(e) {
+        //TODO indicate failure
+        console.error(e.stack);
+        vm.restoringBackup = false;
+      });
     };
   });

@@ -317,11 +317,23 @@ var karmaConfig = {
     'src/bower_components/q/q.js',
     'src/bower_components/lodash/dist/lodash.js',
     'src/bower_components/koast-angular/dist/koast.js',
+    'src/bower_components/ramda/ramda.js',
   ],
   showStack: true
 };
 
 gulp.task('karma', function () {
+  collect(gulp.src(karmaConfig.files)
+      .pipe(angularFileSort()))
+    .then(function (files) {
+      karmaConfig.files = files.map(function (file) {
+        return file.path;
+      });
+      rg.karmaWatch(karmaConfig)();
+    });
+});
+
+gulp.task('test', function () {
   collect(gulp.src(karmaConfig.files)
       .pipe(angularFileSort()))
     .then(function (files) {
@@ -334,8 +346,6 @@ gulp.task('karma', function () {
 
 
 gulp.task('dev', ['server', 'karma']);
-
-gulp.task('test', rg.karma(karmaConfig));
 
 gulp.task('jshint', rg.jshint({
   files: appFiles

@@ -20,6 +20,14 @@
     "smarttabs": true,
     "globals": {
       "angular": true,
-      "_": true
+      "_": true,
+      "R": true,
+      "Q": true,
+      "inject": true,
+      "describe": true,
+      "expect": true,
+      "it": true,
+      "beforeEach": true,
+      "testUtils": true
     }
   }

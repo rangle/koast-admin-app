@@ -47,32 +47,44 @@
       Create a Backup
     </h3>
 
-    <form>
+    <form name='backup'>
       <fieldset>
         <div class="input-wrapper">
           <label>Name</label>
-          <input type="text" ng-model="backupName"/>
+          <input
+          ng-class="{ false: 'alert', true: 'success' }[!!backupName]"
+          ng-required="true"
+          type="text"
+          ng-model="backupName"/>
+        </div>
+        <div class="input-wrapper">
+          <label>Collections (comma separated)</label>
+          <tag-list
+          cid="collections"
+          ng-class="{ false: 'alert', true: 'success' }[!!backupCtrl.collections().length]"></tag-list>
         </div>
       </fieldset>
 
       <fieldset>
         <div class="input-wrapper">
-          <label>Type</label>
+          <label>Type</label> <!-- TODO add api methods to automate type selection -->
         </div>
         <div class="input-wrapper">
           <input type="radio"
                  name="aws"
-                 value="aws"
+                 value="s3"
+                 id="aws"
                  ng-model="backupType"
-                 id="aws">
-          <label class="radio-label" for="aws">AWS</label>
+                 ng-required="!backupType">
+          <label class="radio-label" for="aws">AWS S3</label>
         </div>
         <div class="input-wrapper">
           <input type="radio"
                  name="localFS"
                  value="local"
+                 id="localFS"
                  ng-model="backupType"
-                 id="localFS">
+                 ng-required="!backupType">
           <label class="radio-label" for="localFS">Choice 2</label>
         </div>
       </fieldset>
@@ -87,7 +99,7 @@
                   Cancel
         </button>
         <button class="btn btn--success"
-                ng-click="backupCtrl.createBackup(backupName, backupType)"
+                ng-click="backupCtrl.createBackup(backupName, backupCtrl.collections(), backupType)"
                 ng-disabled="backupCtrl.creatingBackup">
                   Create
         </button>

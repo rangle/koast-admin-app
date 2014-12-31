@@ -1,1 +1,4 @@
-angular.module('koastAdminApp.sections', ['koastAdminApp.sections.backup', 'koastAdminApp.sections.login']);
+angular.module('koastAdminApp.sections', [
+    'koastAdminApp.sections.backup',
+    'koastAdminApp.sections.login'
+]);
