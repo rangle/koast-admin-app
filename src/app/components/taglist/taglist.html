@@ -1,0 +1,6 @@
+<div class='input-wrapper tagList'>
+  <div class='tagItem' ng-repeat='tag in tags()'>{{tag}}
+  <span class='tagItem-remove' ng-click='removeTag(tag)'>x</span>
+  </div>
+  <input ng-model='currentTag' type="text" value=""></input>
+</div>
