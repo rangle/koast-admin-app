@@ -16,6 +16,10 @@ angular.module('koastAdminApp', [
   .config(['$stateProvider', '$urlRouterProvider',
     function ($stateProvider, $urlRouterProvider) {
       $stateProvider
+        .state('testing', {
+          url: '/testing',
+          templateUrl: 'app/test.html'
+        })
         .state('home', {
           url: '/',
           templateUrl: 'app/sections/home/home.html'
@@ -36,13 +40,5 @@ angular.module('koastAdminApp', [
   ])
   .run(function ($state, $rootScope, user, koastAdmin) {
     koastAdmin.load();
-
-    $rootScope.$on('$stateChangeSuccess', function () {
-      if (!user.isAuthenticated() && $state.current.name !== 'login') {
-        $state.go('login', {
-          redirect: $state.current
-        });
-      }
-    });
     user.refreshToken(); //see if the admin koast token we may still have is still valid
   });
