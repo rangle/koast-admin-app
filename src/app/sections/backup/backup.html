@@ -18,7 +18,7 @@
 <!-- List of backups -->
 <ul class="item-list">
   <li ng-repeat="backup in backupCtrl.backups">
-    {{backup.name}}
+    {{backup.receipts[0].data.key}}
     <button class="btn btn--outline"
             ng-click="backupCtrl.restoreBackup(backup.id)"
             ng-disabled="backupCtrl.restoringBackup">restore</button>
