@@ -2,5 +2,5 @@
   <div class='tagItem' ng-repeat='tag in tags()'>{{tag}}
   <span class='tagItem-remove' ng-click='removeTag(tag)'>x</span>
   </div>
-  <input ng-model='currentTag' type="text" value=""></input>
+  <input ng-model='currentTag' ng-blur="addTag(currentTag)" type="text" value="" />
 </div>

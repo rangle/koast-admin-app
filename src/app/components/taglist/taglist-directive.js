@@ -4,7 +4,6 @@ angular.module('koastAdminApp.components.taglist.taglist-directive', [
     'koastAdminApp.components.taglist.taglist-service'
 ])
   .directive('tagList', function(tagList) {
-    var cids;
     return {
       restrict: 'E',
       templateUrl: 'app/components/taglist/taglist.html',
@@ -29,7 +28,13 @@ angular.module('koastAdminApp.components.taglist.taglist-directive', [
 
         function update() {
           if(scope.currentTag && scope.currentTag.indexOf(',') !== -1) {
-            tags[scope.currentTag.replace(',', '')] = true;
+            scope.addTag(scope.currentTag.replace(',', ''));
+          }
+        }
+
+        scope.addTag = function(tag) {
+          if (tag && tag.length > 0) {
+            tags[tag] = true;
             scope.currentTag = '';
           }
         };

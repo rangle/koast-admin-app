@@ -16,14 +16,18 @@
 </p>
 
 <!-- List of backups -->
-<ul class="item-list">
-  <li ng-repeat="backup in backupCtrl.backups">
-    {{backup.receipts[0].data.key}}
-    <button class="btn btn--outline"
-            ng-click="backupCtrl.restoreBackup(backup.id)"
-            ng-disabled="backupCtrl.restoringBackup">restore</button>
-  </li>
-</ul>
+<table class="backup-list">
+  <tbody>
+    <tr ng-repeat="backup in backupCtrl.backups">
+      <td>{{backup.name}}</td>
+      <td>{{backup.timestamp | date:'yyyy-MM-dd'}}</td>
+      <td><button class="btn btn--outline pull-right"
+                  ng-click="backupCtrl.restoreBackup(backup.id)"
+                  ng-disabled="backupCtrl.restoringBackup">restore</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 <div class="empty-state" ng-show="!backupCtrl.backups || backupCtrl.backups.length === 0">
   <div class="empty-state__tag">
@@ -47,15 +51,21 @@
       Create a Backup
     </h3>
 
-    <form name='backup'>
+    <form name='backupForm'>
       <fieldset>
         <div class="input-wrapper">
           <label>Name</label>
           <input
-          ng-class="{ false: 'alert', true: 'success' }[!!backupName]"
+          name="backupName"
+          ng-class="{ false: 'alert', true: 'success' }[backupForm.backupName.$valid]"
           ng-required="true"
           type="text"
+          ng-pattern='/^\S*$/'
           ng-model="backupName"/>
+          <span class="alert--danger"
+                ng-show="backupForm.backupName.$error.pattern">
+            Name can not contain spaces
+          </span>
         </div>
         <div class="input-wrapper">
           <label>Collections (comma separated)</label>
