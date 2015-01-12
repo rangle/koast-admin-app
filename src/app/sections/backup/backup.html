@@ -51,7 +51,7 @@
       Create a Backup
     </h3>
 
-    <form name='backupForm'>
+    <form name='backupForm' novalidate>
       <fieldset>
         <div class="input-wrapper">
           <label>Name</label>
@@ -61,7 +61,7 @@
           ng-required="true"
           type="text"
           ng-pattern='/^\S*$/'
-          ng-model="backupName"/>
+          ng-model="backupCtrl.backupName"/>
           <span class="alert--danger"
                 ng-show="backupForm.backupName.$error.pattern">
             Name can not contain spaces
@@ -84,8 +84,8 @@
                  name="aws"
                  value="s3"
                  id="aws"
-                 ng-model="backupType"
-                 ng-required="!backupType">
+                 ng-model="backupCtrl.backupType"
+                 ng-required="!backupCtrl.backupType">
           <label class="radio-label" for="aws">AWS S3</label>
         </div>
         <div class="input-wrapper">
@@ -93,8 +93,8 @@
                  name="localFS"
                  value="local"
                  id="localFS"
-                 ng-model="backupType"
-                 ng-required="!backupType">
+                 ng-model="backupCtrl.backupType"
+                 ng-required="!backupCtrl.backupType">
           <label class="radio-label" for="localFS">Choice 2</label>
         </div>
       </fieldset>
@@ -105,11 +105,13 @@
 
       <div ng-hide="creatingBackup" class="input-wrapper animate-scale--l-c">
         <button class="btn"
-                ng-click="backupCtrl.toggleModal()">
+                type="button"
+                ng-click="backupCtrl.toggleModal();">
                   Cancel
         </button>
         <button class="btn btn--success"
-                ng-click="backupCtrl.createBackup(backupName, backupCtrl.collections(), backupType)"
+                type="submit"
+                ng-click="backupCtrl.createBackup(backupCtrl.backupName, backupCtrl.collections(), backupCtrl.backupType)"
                 ng-disabled="backupCtrl.creatingBackup">
                   Create
         </button>

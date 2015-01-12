@@ -1,22 +1,30 @@
 'use strict';
 angular.module('koastAdminApp.sections.backup.backup-controller', [
-    'koastAdminApp.sections.backup.backup-controller'
-  ])
+  'koastAdminApp.sections.backup.backup-controller'
+])
   .controller('backupCtrl', function ($interval, backup, tagList) {
     var vm = this;
 
     vm.isModalVisible = false;
     vm.toggleModal = function () {
       vm.isModalVisible = !vm.isModalVisible;
+      if (vm.isModalVisible === true) {
+        init();
+      }
     };
 
-    vm.collections = function () {
-        return tagList.val('collections');
-      },
+    function init() {
+      vm.backupName = '';
+      vm.backupType = null;
+      tagList.requestReset();
+    }
 
-      backup.list()
+    vm.collections = function () {
+      return tagList.val('collections');
+    };
+
+    backup.list()
       .then(function (backups) {
-        console.log(backups);
         vm.backups = backups;
       });
 
@@ -31,12 +39,11 @@ angular.module('koastAdminApp.sections.backup.backup-controller', [
 
       backup.createBackup(name, collections, type)
         .then(function (receipt) {
-          console.log(receipt);
           var id = receipt.id;
           backingupInterval = $interval(function () {
             backup.status({
-                id: id
-              })
+              id: id
+            })
               .then(function (status) {
                 vm.percent = (status.status === 'saved') ? 50 : 100;
                 if (vm.percent >= 100) {
@@ -64,8 +71,8 @@ angular.module('koastAdminApp.sections.backup.backup-controller', [
         .then(function (receipt) {
           restoringInterval = $interval(function () {
             backup.status({
-                id: id
-              })
+              id: id
+            })
               .then(function (status) {
                 vm.restoringPercent = status.completed;
                 if (vm.restoringPercent >= 100) {
