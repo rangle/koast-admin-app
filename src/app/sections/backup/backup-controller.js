@@ -6,11 +6,14 @@ angular.module('koastAdminApp.sections.backup.backup-controller', [
     var vm = this;
 
     vm.isModalVisible = false;
-    vm.toggleModal = function () {
-      vm.isModalVisible = !vm.isModalVisible;
-      if (vm.isModalVisible === true) {
-        init();
-      }
+
+    vm.hide = function(){
+      vm.isModalVisible = false;
+    };
+
+    vm.show = function(){
+      init();
+      vm.isModalVisible = true;
     };
 
     function init() {
