@@ -1,3 +1,4 @@
+'use strict';
 angular.module('koastAdminApp.components.navbar.navbar-directive', []).directive('navbar', [function () {
     return {
         restrict: 'E',
@@ -12,9 +13,9 @@ angular.module('koastAdminApp.components.navbar.navbar-directive', []).directive
             };
 
             scope.hideNav = function () {
-                scope.navIsVisible = false
+                scope.navIsVisible = false;
             };
 
         }
     };
-}])
+}]);

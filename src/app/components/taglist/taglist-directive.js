@@ -13,10 +13,15 @@ angular.module('koastAdminApp.components.taglist.taglist-directive', [
         var tags = {};
 
         if(tagList._get(id))  {
-          throw new Error('Attempted to initialize tagList with cid "' + id + '" twice!')
+          throw new Error('Attempted to initialize tagList with cid "' + id + '" twice!');
         }
 
         scope.tags = function() {
+          if (tagList.resetFlag === true) {
+            tags = {};
+            tagList.reset();
+            tagList._register(id, scope.tags);
+          }
           return Object.keys(tags);
         };
 
@@ -37,7 +42,7 @@ angular.module('koastAdminApp.components.taglist.taglist-directive', [
             tags[tag] = true;
             scope.currentTag = '';
           }
-        };
+        }
 
         scope.$watch('currentTag', update);
       }

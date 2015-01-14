@@ -13,6 +13,14 @@ angular.module('koastAdminApp.components.taglist.taglist-service', [])
       val: function(cid) { //Retruns an array of tags associated with the tagList
         var getTag = cids[cid];
         return getTag ? getTag() : [];
+      },
+      resetFlag: false,
+      requestReset: function() {
+        this.resetFlag = true;
+      },
+      reset: function() {
+        this.resetFlag = false;
+        cids = {};
       }
     };
   });
