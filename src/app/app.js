@@ -19,6 +19,9 @@ angular.module('koastAdminApp', [
           url: '/backup',
           templateUrl: 'app/sections/backup/backup.html',
           controller: 'backupCtrl as backupCtrl'
+      }).state('config', {
+          url: '/config',
+          templateUrl: 'app/sections/config/config.html'
       });
 
       $urlRouterProvider.otherwise('/');
