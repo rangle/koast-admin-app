@@ -1,0 +1,33 @@
+/* --------------------------------
+
+  Tables
+
+-------------------------------- */
+.backup-list {
+  @include transition(all $base-anim-dur cubic-bezier(0.455, 0.03, 0.515, 0.955));
+  background-color: #fff;
+  overflow: hidden;
+  margin-bottom: 1.5em;
+  width: 100%;
+  border: 1px solid darken($light-grey, 5%);
+  border-radius: $base-radius;
+
+  tr {
+    border: 1px solid darken($light-grey, 5%);
+    border-radius: $base-radius;
+  }
+
+  td {
+    padding: 1em .6em;
+    vertical-align: bottom;
+    font-size: 1.8rem;
+    line-height: 1.2;
+  }
+
+  .btn {
+    display: inline-block;
+    float: right;
+    font-size: 1.2rem;
+    padding: .2em 1.2em;
+  }
+}
