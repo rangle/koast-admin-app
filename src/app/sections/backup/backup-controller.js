@@ -51,7 +51,7 @@ angular.module('koastAdminApp.sections.backup.backup-controller', [
                 vm.percent = (status.status === 'saved') ? 50 : 100;
                 if (vm.percent >= 100) {
                   $interval.cancel(backingupInterval);
-                  vm.toggleModal();
+                  vm.hide();
                   vm.creatingBackup = false;
                 }
               });
@@ -60,7 +60,7 @@ angular.module('koastAdminApp.sections.backup.backup-controller', [
         .then(null, function (e) {
           //TODO indicate failure
           console.error(e.stack);
-          vm.toggleModal();
+          vm.hide();
           vm.creatingBackup = false;
         });
     };
