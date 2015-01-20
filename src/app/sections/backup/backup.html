@@ -8,7 +8,8 @@
 </div>
 
 <p class="add-bottom text-right">
-  <button ng-disabled="backupCtrl.restoringBackup" ng-click="backupCtrl.toggleModal()"
+  <button ng-disabled="backupCtrl.restoringBackup" ng-click="backupCtrl.show()"
+          rg-esc-keyup="backupCtrl.hide()"
           class="btn btn--success">
             <i class="fa fa-plus"></i>
             Create New Backup
@@ -39,15 +40,16 @@
 </div>
 
 <!-- New Backup Modal -->
-<div ng-class="{ false: 'modal', true: 'modal--show' }[backupCtrl.isModalVisible]">
+<div ng-class="{ false: 'modal', true: 'modal--show' }[backupCtrl.isModalVisible]"
+     rg-esc-keyup="backupCtrl.hide()">
   <!-- Overlay -->
-  <div class="overlay" ng-click="backupCtrl.toggleModal()"></div>
+  <div class="overlay" ng-click="backupCtrl.hide()"></div>
 
   <!-- Modal Content -->
   <div class="modal__contents modal--transition">
     <!-- Close button -->
     <h3 class="modal__header">
-      <a class="modal__close" href="" ng-click="backupCtrl.toggleModal()">&times;</a>
+      <a class="modal__close" href="" ng-click="backupCtrl.hide()">&times;</a>
       Create a Backup
     </h3>
 
@@ -106,7 +108,7 @@
       <div ng-hide="creatingBackup" class="input-wrapper animate-scale--l-c">
         <button class="btn"
                 type="button"
-                ng-click="backupCtrl.toggleModal();">
+                ng-click="backupCtrl.hide()">
                   Cancel
         </button>
         <button class="btn btn--success"
