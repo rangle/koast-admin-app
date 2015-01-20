@@ -2,8 +2,10 @@
 angular.module('koastAdminApp.sections.backup.backup-controller', [
   'koastAdminApp.sections.backup.backup-controller'
 ])
-  .controller('backupCtrl', function ($interval, backup, tagList) {
+  .controller('backupCtrl', function ($rootScope, $interval, backup, tagList) {
     var vm = this;
+    vm.$rootScope = $rootScope;
+    vm.$interval = $interval;
 
     vm.isModalVisible = false;
 
@@ -26,6 +28,7 @@ angular.module('koastAdminApp.sections.backup.backup-controller', [
       return tagList.val('collections');
     };
 
+    vm.backups = [];
     backup.list()
       .then(function (backups) {
         vm.backups = backups;
@@ -53,6 +56,10 @@ angular.module('koastAdminApp.sections.backup.backup-controller', [
                   $interval.cancel(backingupInterval);
                   vm.hide();
                   vm.creatingBackup = false;
+                  backup.details({id: id})
+                    .then(function (backupDetails) {
+                      vm.backups.push(backupDetails);
+                    });
                 }
               });
           }, 100);
