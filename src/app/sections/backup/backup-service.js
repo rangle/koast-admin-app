@@ -28,6 +28,10 @@ angular.module('koastAdminApp.sections.backup.backup-service', [])
         return api.callMethod('backup', 'stat', id);
       },
 
+      details: function (id) {
+        return api.callMethod('backup', 'details', id);
+      },
+
       //get a list of backups
       list: function () {
         return api.callMethod('backup', 'list');
