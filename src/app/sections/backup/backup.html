@@ -23,8 +23,8 @@
       <td>{{backup.name}}</td>
       <td>{{backup.timestamp | date:'yyyy-MM-dd'}}</td>
       <td><button class="btn btn--outline pull-right"
-                  ng-click="backupCtrl.restoreBackup(backup.id)"
-                  ng-disabled="backupCtrl.restoringBackup">restore</button>
+            ng-click="backupCtrl.confirmRestore(backup)"
+            ng-disabled="backupCtrl.restoringBackup">Restore</button>
       </td>
     </tr>
   </tbody>
@@ -36,6 +36,39 @@
     <i class="fa fa-database fa-5x"></i>
     <!-- Main Title -->
     <h3 class="empty-state__title">No backups found</h3>
+  </div>
+</div>
+
+<div ng-class="{ false: 'modal', true: 'modal--show' }[backupCtrl.confirmingRestore]">
+  <!-- Overlay -->
+  <div class="overlay" ng-click="backupCtrl.cancelRestore()"></div>
+  <!-- Modal Content -->
+  <div class="modal__contents modal--transition">
+    <!-- Close button -->
+    <h3 class="modal__header">
+      <a class="modal__close" href="" ng-click="backupCtrl.cancelRestore()">&times;</a>
+      Confirm Restore
+    </h3>
+    <div class="backup">
+      <h4>Backup : {{ backupCtrl.toRestore.name }}</h4>
+      <h4>Created On : {{ backupCtrl.toRestore.timestamp  | date:'yyyy-MM-dd'}}</h4>
+
+      <h4>Collections</h4>
+      <ul>
+        <li ng-repeat="receipt in backupCtrl.toRestore.receipts">{{ receipt.collection }}</li>
+        <li ng-show="backupCtrl.toRestore.receipts.length === 0">None selected</li>
+      </ul>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn--outline"
+              ng-click="backupCtrl.cancelRestore()"
+              ng-disabled="backupCtrl.restoringBackup">Cancel</button>
+
+      <button class="btn btn--success"
+              ng-click="backupCtrl.restoreBackup(backupCtrl.toRestore.backupId)"
+              ng-disabled="backupCtrl.restoringBackup">OK</button>
+    </div>
+
   </div>
 </div>
 

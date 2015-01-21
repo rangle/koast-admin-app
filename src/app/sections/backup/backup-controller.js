@@ -65,8 +65,20 @@ angular.module('koastAdminApp.sections.backup.backup-controller', [
         });
     };
 
+    vm.confirmingRestore = false;
+    vm.confirmRestore = function(backupToRestore) {
+      vm.confirmingRestore = true;
+      vm.toRestore = backupToRestore;
+    };
+
+    vm.cancelRestore = function() {
+      vm.confirmingRestore = false;
+      vm.toRestore = {};
+    };
+
     var restoringInterval;
     vm.restoreBackup = function (id) {
+      vm.confirmingRestore = false;
       vm.restoringBackup = true;
       vm.restoringPercent = 0;
       vm.restoringName = id;
