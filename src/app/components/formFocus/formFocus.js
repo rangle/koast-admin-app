@@ -1,0 +1,1 @@
+angular.module('koastAdminApp.components.formFocus', ['koastAdminApp.components.formFocus.formFocus-directive']);
