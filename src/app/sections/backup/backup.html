@@ -10,6 +10,7 @@
 <p class="add-bottom text-right">
   <button ng-disabled="backupCtrl.restoringBackup" ng-click="backupCtrl.show()"
           rg-esc-keyup="backupCtrl.hide()"
+          form-focus="backupName"
           class="btn btn--success">
             <i class="fa fa-plus"></i>
             Create New Backup
